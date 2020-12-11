@@ -1,36 +1,37 @@
-var H = [];
-var graph = [];
-var start_node = "a";
-var end_node = "k";
+var G = G || {};
+G.H = [];
+G.graph = [];
+G.start_node = "a";
+G.end_node = "k";
 
-function parseHeuristics(heuristics){
+G.parseHeuristics = function(heuristics){
     var H_arr = heuristics.split("\n");
     
     for(var i in H_arr){
         var parts = H_arr[i].split("=");
         var name = parts[0].replace("H(", "").replace(")", "").trim();
 
-        H[name] = parseInt(parts[1]);
+        G.H[name] = parseInt(parts[1]);
     }
 }
 
-function parseGraph(value){
+G.parseGraph = function(value){
     var arr = [];
 
-    graph = [];
+    G.graph = [];
     arr = value.split("\n");
 
     for(var i in arr){
         var edge = arr[i].split(",");
         var node_from =  edge[0].trim();
 
-        if(graph[node_from]){
-            graph[node_from].push({
+        if(G.graph[node_from]){
+            G.graph[node_from].push({
                 node_to: edge[1].trim(),
                 cost: parseInt(edge[2].trim())
             });
         }else{
-            graph[node_from] = [{
+            G.graph[node_from] = [{
                 node_to: edge[1].trim(),
                 cost: parseInt(edge[2].trim())
             }];
@@ -38,17 +39,17 @@ function parseGraph(value){
     }
 }
 
-function BestFirstSearch(){
+G.BestFirstSearch = function(){
     // saved frontier for print
     var frontier_trace = [];
 
-    var current_node = start_node;
+    var current_node = G.start_node;
     frontier_trace.push(current_node);
 
-    while(current_node != end_node && current_node != null){
+    while(current_node != G.end_node && current_node != null){
         // add node to frontier
         //frontier_trace.push(current_node);
-        var children = graph[current_node];
+        var children = G.graph[current_node];
         
         // add child nodes to frontier
         var min_child = null;
@@ -62,10 +63,10 @@ function BestFirstSearch(){
                 frontier_trace.push(children[i].node_to);
             }
 
-            if(children[i].node_to == end_node){
+            if(children[i].node_to == G.end_node){
                 min_child = children[i];
                 break;
-            }else if(H[children[i].node_to] < H[min_child.node_to]){
+            }else if(G.H[children[i].node_to] < G.H[min_child.node_to]){
                 min_child = children[i];
             }
         }
@@ -81,11 +82,13 @@ function BestFirstSearch(){
         frontier_trace.push(current_node);
     }
 
-    console.log("Nodes added to frontier: ");
-    console.log(frontier_trace);
+    var s = "BestFirstSearch - Nodes added to frontier: <br/>" + frontier_trace;
+	s = s.replaceAll(",", ", ");
+	
+	return s;
 }
 
-function BreadthFirstSearch(){
+G.BreadthFirstSearch = function(){
     // saved frontier for print
     var frontier_trace = [];
 
@@ -93,15 +96,15 @@ function BreadthFirstSearch(){
     var frontier = [];
 
     // add starting node to frontier
-    frontier_trace.push(start_node);
-    frontier.push(start_node);
+    frontier_trace.push(G.start_node);
+    frontier.push(G.start_node);
 
     var current_node = "";
-    while(current_node != end_node){
+    while(current_node != G.end_node){
         // remove first node
         current_node = frontier.shift();
        
-        var children = graph[current_node];
+        var children = G.graph[current_node];
 
         // add child nodes to frontier
         for(var i in children){
@@ -113,11 +116,13 @@ function BreadthFirstSearch(){
         }
     }
 
-    console.log("Nodes added to frontier: ");
-    console.log(frontier_trace);
+    var s = "BreadthFirstSearch - Nodes added to frontier: <br/>" + frontier_trace;
+	s = s.replaceAll(",", ", ");
+	
+	return s;
 }
 
-function DepthFirstSearch(){
+G.DepthFirstSearch = function(){
     // saved frontier for print
     var frontier_trace = [];
 
@@ -125,15 +130,15 @@ function DepthFirstSearch(){
     var frontier = [];
 
     // add starting node to frontier
-    frontier_trace.push(start_node);
-    frontier.push(start_node);
+    frontier_trace.push(G.start_node);
+    frontier.push(G.start_node);
 
     var current_node = "";
-    while(current_node != end_node){
+    while(current_node != G.end_node){
         // remove last node
         current_node = frontier.pop();
        
-        var children = graph[current_node];
+        var children = G.graph[current_node];
 
         // add child nodes to frontier
         for(var i in children){
@@ -145,26 +150,28 @@ function DepthFirstSearch(){
         }
     }
 
-    console.log("Nodes added to frontier: ");
-    console.log(frontier_trace);
+    var s = "DepthFirstSearch - Nodes added to frontier: <br/>" + frontier_trace;
+	s = s.replaceAll(",", ", ");
+	
+	return s;
 }
 
-function LowestCostFirstSearch(){
-    var graph_copy = graph;
+G.LowestCostFirstSearch = function(){
+    var graph_copy = G.graph;
 
     // saved frontier for print
     var frontier_trace = [];
 
     var frontier = PriorityQueue();
 
-    var current_node = start_node;
+    var current_node = G.start_node;
 
     // add starting node to frontier
-    frontier_trace.push(start_node);
-    frontier.enqueue(start_node, 0);
+    frontier_trace.push(G.start_node);
+    frontier.enqueue(G.start_node, 0);
 
     var current_node = "";
-    while(current_node != end_node){
+    while(current_node != G.end_node){
         // remove node
         current_node = frontier.dequeue();
    
@@ -191,19 +198,21 @@ function LowestCostFirstSearch(){
         }
     }
 
-    console.log("Nodes added to frontier: ");
-    console.log(frontier_trace);
+    var s = "LowestCostFirstSearch - Nodes added to frontier: <br/>" + frontier_trace;
+	s = s.replaceAll(",", ", ");
+	
+	return s;
 }
 
-function GreedySearch(){
+G.GreedySearch = function(){
     // saved frontier for print
     var frontier_trace = [];
 
-    var current_node = start_node;
-    while(current_node != end_node && current_node != null){
+    var current_node = G.start_node;
+    while(current_node != G.end_node && current_node != null){
         // add node to frontier
         frontier_trace.push(current_node);
-        var children = graph[current_node];
+        var children = G.graph[current_node];
         
         // add child nodes to frontier
         var min_child = null;
@@ -215,7 +224,7 @@ function GreedySearch(){
         if(min_child == null) console.log(current_node);
 
         for(var i in children){
-            if(children[i].node_to == end_node){
+            if(children[i].node_to == G.end_node){
                 min_child = children[i];
                 break;
             }else if(children[i].cost < min_child.cost){
@@ -234,26 +243,28 @@ function GreedySearch(){
         frontier_trace.push(current_node);
     }
 
-    console.log("Nodes added to frontier: ");
-    console.log(frontier_trace);
+    var s = "Greedy Search - Nodes added to frontier: <br/>" + frontier_trace;
+	s = s.replaceAll(",", ", ");
+	
+	return s;
 }
 
-function AStarSearch(){
-    var graph_copy = graph;
+G.AStarSearch = function(){
+    var graph_copy = G.graph;
 
     // saved frontier for print
     var frontier_trace = [];
 
     var frontier = PriorityQueue();
 
-    var current_node = start_node;
+    var current_node = G.start_node;
 
     // add starting node to frontier
-    frontier_trace.push(start_node);
-    frontier.enqueue(start_node, 0);
+    frontier_trace.push(G.start_node);
+    frontier.enqueue(G.start_node, 0);
 
     var current_node = "";
-    while(current_node != end_node){
+    while(current_node != G.end_node){
         // remove node with lowest cost
         current_node = frontier.dequeue();
         
@@ -267,7 +278,7 @@ function AStarSearch(){
                 frontier_trace.push(children[i].node_to);
                 
                 //console.log(current_node + "   " + children[i].node_to);
-                children[i].cost = children[i].cost + H[children[i].node_to];
+                children[i].cost = children[i].cost + G.H[children[i].node_to];
                 frontier.enqueue(children[i].node_to, children[i].cost);
 
                 // update paths cost
@@ -279,8 +290,19 @@ function AStarSearch(){
         }
     }
 
-    console.log("Nodes added to frontier: ");
-    console.log(frontier_trace);
+    var s = "A* Search - Nodes added to frontier: <br/>" + frontier_trace;
+	s = s.replaceAll(",", ", ");
+	
+	return s;
+}
+
+G.run = function(){
+	var result = document.getElementById("result");
+	
+	result.innerHTML = G.DepthFirstSearch() + "<br /><br />" + G.BreadthFirstSearch() +
+					"<br /><br />" + G.BestFirstSearch() + "<br /><br />" +
+					G.GreedySearch() + "<br /><br />" + G.LowestCostFirstSearch() +
+					"<br /><br />" + G.AStarSearch();;
 }
 
 /*

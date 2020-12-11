@@ -13,8 +13,13 @@
 </select>
 
 <div id="playground">
-    <textarea id="graph" onchange="parseGraph(this.value)">a , b , 2</textarea>
-    <textarea id="heuristics" name="heuristics" placeholder="Enter heuristics here in format:a = 1 or H(a) = 1" onchange="parseHeuristics(this.value)"></textarea>
+    <textarea id="graph" onchange="G.parseGraph(this.value)">a , b , 2</textarea>
+    <textarea id="heuristics" name="heuristics" placeholder="Enter heuristics here in format:a = 1 or H(a) = 1" onchange="G.parseHeuristics(this.value)"></textarea>
+	<br /><br />
+	<input type="button" onclick="G.run()" value="Run" class="btn-run" />
+	<br/>
+	<p id="result">
+	</p>
 </div>
 
 <script>
