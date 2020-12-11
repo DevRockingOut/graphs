@@ -1,0 +1,29 @@
+<html>
+<head>
+    <script type="text/javascript" src="PriorityQueue.js"></script>
+    <script type="text/javascript" src="module2.js"></script>
+    <script type="text/javascript" src="module3.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<select name="algos" id="algos" onchange="algoSelected(this.value);">
+    <option value="">Choose among the following algorithms</option>
+    <option value="AC3">AC 3</option>
+</select>
+
+<div id="playground">
+    <textarea id="graph" onchange="parseGraph(this.value)">a , b , 2</textarea>
+    <textarea id="heuristics" name="heuristics" placeholder="Enter heuristics here in format:a = 1 or H(a) = 1" onchange="parseHeuristics(this.value)"></textarea>
+</div>
+
+<script>
+    function algoSelected(value){
+        if(value == "AC3"){
+            AC_3.init();
+        }
+    }
+</script>
+
+</body>
+</html>
