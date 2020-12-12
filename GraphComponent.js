@@ -4,25 +4,25 @@
  * @constructor
  */
 function GraphComponent(){
-    this.id = null;
-    this.interface = null;
+    this.id = id;
+    this.component = null;
 }
 
 /**
  * Returns html representation of graph
  * @param {Number} id id of new graph
  */
-GraphComponent.prototype.createUI = function(id){
+GraphComponent.prototype.create = function(id){
     this.id = id;
-    this.interface = "<div id='" + id + "'>5103210991</div>";
-    return this.interface;
+    this.component = "<div id='" + id + "'>5103210991</div>";
+    return this.component;
 }
 
 /**
  * Delete html graph
  * @param {Number} id id of graph
  */
-GraphComponent.prototype.deleteUI = function(id){
+GraphComponent.prototype.delete = function(id){
     var element = document.getElementById(id);
     element.parentNode.removeChild(element);
 }
