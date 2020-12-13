@@ -3,7 +3,7 @@
  * 
  * @constructor
  */
-function GraphComponent(){
+function GraphComponent(id){
     this.id = id;
     this.component = null;
 }
@@ -14,7 +14,7 @@ function GraphComponent(){
  */
 GraphComponent.prototype.create = function(id){
     this.id = id;
-    this.component = "<div id='" + id + "'>5103210991</div>";
+    this.component = "<div id='" + id + "'></div>";
     return this.component;
 }
 

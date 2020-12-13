@@ -8,7 +8,8 @@ function Graph(id){
     this.edges_components = [];
     this.graph_component = new GraphComponent();
     this.id = id;
-    this.graph_component.create(id);
+
+    document.body.innerHTML += this.graph_component.create(id);
 }
 
 Graph.prototype.addNode = function(id){
@@ -17,7 +18,7 @@ Graph.prototype.addNode = function(id){
     this.nodes_components.push(node);
 
     // TODO: calculate position in page where to put node
-    document.getElementById(this.id).appendChild(component);
+    document.getElementById(this.id).innerHTML += component;
 }
 
 Graph.prototype.addEdge = function(id){
