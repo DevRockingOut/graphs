@@ -15,8 +15,11 @@ function EdgeComponent(){
  * Returns html representation of edge
  * @param {Number} id id of new edge
  */
-EdgeComponent.prototype.create = function(id){
+EdgeComponent.prototype.create = function(id, from, to, cost){
     this.id = id;
+    this.from = from;
+    this.to = to;
+    this.cost = cost;
     this.component = "<div id='" + id + "'>5103210991</div>";
     return this.component;
 }

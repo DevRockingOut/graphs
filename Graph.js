@@ -1,77 +1,125 @@
 /**
  * class Graph
  * 
+ * @param {string} graph_id id of new graph
+ * @param {number} container_id id of output container
+ * @param {boolean} reset reset output container content
+ * 
  * @constructor
  */
-function Graph(id){
+function Graph(graph_id, container_id){
+    this.graph = []; // graph[node] = [] (array of edges) 
     this.nodes_components = [];
     this.edges_components = [];
     this.graph_component = new GraphComponent();
-    this.id = id;
+    this.graph_id = graph_id;
 
-    document.body.innerHTML += this.graph_component.create(id);
+    var component = this.graph_component.create(graph_id);
+    this.render(container_id, component, true);
 }
 
+
+/**
+ * Render html string 
+ * @param {number} container_id id of output container (e.g. div)
+ * @param {string} html_string string representation of html object
+ * @param {boolean} reset reset output container content before rendering
+ */
+Graph.prototype.render = function(container_id, html_string, reset){
+    if(reset){
+        document.getElementById(container_id).innerHTML = html_string;
+    }else{
+        document.getElementById(container_id).innerHTML += html_string;
+    }
+}
+
+/**
+ * Remove an element from page
+ * @param {string} id id of element to remove
+ */
+Graph.prototype.remove = function(id){
+    var elem = document.getElementById(id);
+    elem.parentNode.removeChild(elem);
+}
+
+
+/**
+ * Add new node to graph
+ * @param {string} id node id
+ */
 Graph.prototype.addNode = function(id){
     var node = new NodeComponent();
     var component = node.create(id);
-    this.nodes_components.push(node);
-
+    this.nodes_components[id] = node;
+    this.graph[id] = [];
+    
     // TODO: calculate position in page where to put node
-    document.getElementById(this.id).innerHTML += component;
+    this.render(this.graph_id, component, false);
 }
 
-Graph.prototype.addEdge = function(id){
+
+/**
+ * Add new edge to graph
+ * @param {number} id edge id
+ * @param {string} from_node origin node id
+ * @param {string} to_node end node id
+ * @param {number} edge_cost edge cost (distance)
+ */
+Graph.prototype.addEdge = function(id, from_node, to_node, edge_cost){
     var edge = new EdgeComponent();
-    var component = edge.create(id);
-    this.edges_components.push(edge);
+    var component = edge.create(id, from_node, to_node, edge_cost);
+    this.edges_components[id] = edge;
+    this.graph[from_node].push({edge_id: id, from: from_node, to: to_node, cost: edge_cost});
 
     // TODO: calculate position in page where to put edge
-    document.getElementById(this.id).appendChild(component);
+    this.render(this.graph_id, component, false);
 }
 
-Graph.prototype.deleteNode = function(id, node_index){
-    this.graph_component.delete(id);
 
-    if(node_index != null){
-        // remove edge
-        this.nodes_components.splice(node_index, 1); 
-    }else{
-        // search for edge and remove it from array
-        for(var i in this.nodes_components){
-            if(this.nodes_components[i].id == id){
-                // edge found
-                this.nodes_components.splice(i, 1);
-                i = this.nodes_components.length -1;
-            }
+/**
+ * Delete node from graph
+ * @param {string} id node id
+ */
+Graph.prototype.deleteNode = function(id){
+    this.nodes_components[id] = null;
+    this.graph[id] = [];
+    this.remove(id);
+}
+
+
+/**
+ * Delete edge from graph
+ * 
+ * @param {number} id edge id
+ * @param {string} from_node origin node id
+ */
+Graph.prototype.deleteEdge = function(id, from_node){
+    this.edges_components[id] = null;
+
+    // search for edge and remove it from array
+    for(var i in this.graph[from_node]){
+        if(this.graph[from_node][i].edge_id == id){
+            // edge found
+            this.graph[from_node].splice(i, 1);
+            i = this.graph[from_node].length -1;
         }
     }
+
+    this.remove(id);
 }
 
-Graph.prototype.deleteEdge = function(id, edge_index){
-    this.graph_component.delete(id);
 
-    if(edge_index != null){
-        // remove edge
-        this.edges_components.splice(edge_index, 1); 
-    }else{
-        // search for edge and remove it from array
-        for(var i in this.edges_components){
-            if(this.edges_components[i].id == id){
-                // edge found
-                this.edges_components.splice(i, 1);
-                i = this.edges_components.length -1;
-            }
-        }
-    }
-}
-
+/**
+ * Delete graph instance
+ */
 Graph.prototype.deleteGraph = function(){
-    for(var i in this.edges_components){
-        Graph.deleteEdge(this.edges_components[i].id, i);
+    for(var id in this.edges_components){
+        this.deleteEdge(id, this.edges_components[id].from);
     }
 
     for(var i in this.nodes_components){
-        Graph.deleteNode(this.nodes_components[i].id, i);
+        this.deleteNode(this.nodes_components[i].id);
     }
+
+    this.graph_component = null;
 }

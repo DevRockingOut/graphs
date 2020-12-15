@@ -7,6 +7,7 @@
     <script type="text/javascript" src="NodeComponent.js"></script>
     <script type="text/javascript" src="EdgeComponent.js"></script>
     <script type="text/javascript" src="Graph.js"></script>
+    <script type="text/javascript" src="main.js"></script>
     <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -16,7 +17,7 @@
     <option value="AC3">AC 3</option>
 </select>
 
-<div id="playground">
+<div>
     <textarea id="graph" onchange="G.parseGraph(this.value)">a , b , 2</textarea>
     <textarea id="heuristics" name="heuristics" placeholder="Enter heuristics here in format:a = 1 or H(a) = 1" onchange="G.parseHeuristics(this.value)"></textarea>
 	<br /><br />
@@ -26,16 +27,9 @@
 	</p>
 </div>
 
-<script>
-    function algoSelected(value){
-        if(value == "AC3"){
-            AC_3.init();
-        }
-    }
-
-    const graph1 = new Graph(1);
-    graph1.addNode("A");
-</script>
+<div id="playground">
+    
+</div>
 
 </body>
 </html>

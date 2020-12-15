@@ -16,6 +16,7 @@ function NodeComponent(){
  */
 NodeComponent.prototype.create = function(name){
     this.id = name;
+    this.name = name;
     this.calculatePosition();
     this.component = "<div id='" + name + "' class='node' style='width: " + this.position.x + "; height: " + this.position.y + ";'>" + name + "</div>";
     return this.component;
