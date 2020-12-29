@@ -64,10 +64,16 @@
                           </div>
                           <div class="bottom">
                             <div class="row">
-                                <div id="msg">
-                                    <p>Are you sure you want to delete the graph?</p>
-                                    <input type="checkbox" id="cboRememberChoice" name="cboRememberChoice" /><label for="cboRememberChoice">Don't ask me again</label>
-                                </div>
+                              <div id="msg">
+                                  <p>Are you sure you want to delete the graph?</p>
+                                  <input type="checkbox" id="cboRememberChoice" name="cboRememberChoice" /><label for="cboRememberChoice">Don't ask me again</label>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div id="actions">
+                                <button id="btnDeleteGraph" onclick="deleteGraph()">DELETE</button>
+                                <button id="btnCancel" onclick="removeExpand()">CANCEL</button>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -98,6 +104,7 @@ function removeExpand(){
     document.querySelector('.dialog').classList.remove('expand');
     document.querySelector('.dialog > .content').classList.remove('expand');
     document.querySelector('.dialog .x-touch').classList.remove('expand');
+    document.getElementById('cboRememberChoice').checked = false;
     event.stopPropagation();
 }
 

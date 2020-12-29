@@ -112,6 +112,36 @@
     align-items: center;
 }
 
+.dialog #actions {
+    width:100%;
+}
+
+.dialog #btnDeleteGraph {
+    float:right;
+    border:none;
+    padding-top:15px;
+    background-color:transparent;
+    color:#0188CC;
+    font-weight:bold;
+    font-size:14px;
+    margin-right:10px;
+    margin-left: 10px;
+    outline:none;
+    cursor:pointer;
+}
+
+.dialog #btnCancel {
+    float:right;
+    border:none;
+    padding-top:15px;
+    background-color:transparent;
+    color:#0188CC;
+    font-weight:bold;
+    font-size:14px;
+    outline:none;   
+    cursor:pointer;
+}
+
 .from {
     position: absolute;
     transition: opacity 200ms 100ms cubic-bezier(0.0, 0.0, 0.2, 1);
@@ -229,6 +259,7 @@
     display: flex;
     flex-direction: row;
     height: 60px;
+    margin-top:10px;
 }
 
 .dialog .content.expand {
