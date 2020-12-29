@@ -14,6 +14,10 @@ function Graph(graph_id, container_id){
     this.graph_component = new GraphComponent();
     this.graph_id = graph_id;
 
+    this.edit = false;
+    this.dragging = false;
+    this.objectDrag = null;
+
     var component = this.graph_component.create(graph_id);
     this.render(container_id, component, true);
 }
@@ -122,4 +126,40 @@ Graph.prototype.deleteGraph = function(){
     }
 
     this.graph_component = null;
+}
+
+
+/**
+ * Toogle edit mode
+ * @param {boolean} edit edit mode
+ */
+Graph.prototype.setEdit = function(edit){ this.edit = edit; }
+
+Graph.prototype.enableDrag = function(){
+    document.getElementById(this.graph_component.id).addEventListener("onclick", function(e){
+        if(this.edit){
+            if(this.dragging){ 
+                // object already grab so drop
+                this.drop(e);
+            }else{
+                this.drag(e);
+            }
+        }
+    });
+}
+
+Graph.prototype.drag = function(e){
+    // detect if user is trying to drag a node
+    var elem = document.elementFromPoint(e.clientX, e.clientY);
+    if(elem && elem.className == "node"){
+        this.objectDrag = elem.id;
+        this.dragging = true;
+    }
+}
+
+Graph.prototype.drop = function(e){
+    // detect if there is another element close
+    var elem = document.elementFromPoint(e.clientX, e.clientY);
+    this.objectDrag = null;
+    this.dragging = false;
 }

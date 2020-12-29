@@ -8,10 +8,17 @@
     <script type="text/javascript" src="EdgeComponent.js"></script>
     <script type="text/javascript" src="Graph.js"></script>
     <script type="text/javascript" src="main.js"></script>
+    <link rel="stylesheet" href="graph.css" />
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-
+<div class="container">
+    <div id="head">
+        <h1 id="title">Graph Algorithms Simulation</h1>
+        <!--<select id="fonts"></select>-->
+    </div>
+<!--
 <select name="algos" id="algos" onchange="algoSelected(this.value);">
     <option value="">Choose among the following algorithms</option>
     <option value="AC3">AC 3</option>
@@ -26,10 +33,75 @@
 	<p id="result">
 	</p>
 </div>
+-->
+    <div class="content">
+        <div id="graphMenu">
+            <div id="left">
+                <button onclick="replay()" id="btnReplaySimulation" class="menu btn-action"><img src="icons/replay.svg" /></button>
+                <button onclick="pause()" id="btnPauseSimulation" class="menu btn-action"><img src="icons/pause.svg" /></button>
+                <button onclick="zoom()" id="btnZoom" class="menu btn-action"><img src="icons/zoom.svg" /></button>
+                <button onclick="zoomOut()" id="btnZoomOut" class="menu btn-action"><img src="icons/zoom_out.svg" /></button>
+            </div>
+            <div id="right">
+                <button onclick="editGraph()" id="btnEditGraph" class="menu btn-action"><img src="icons/edit.svg" /></button>
+                <div class="dialog">
+                    <div class="content" onclick="addExpand(this)">
+                      <div class="from">
+                        <div class="from-contents">
+                          <div class="title"><img src="icons/delete.svg" /></div>
+                        </div>
+                      </div>
+                      <div class="to">
+                        <div class="to-contents">
+                          <div class="top">
+                            <div class="title-large">Confirmation</div>
+                            <div class="x-touch" onclick="removeExpand()">
+                              <div class="x">
+                                <div class="line1"></div>
+                                <div class="line2"></div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="bottom">
+                            <div class="row">
+                                <div id="msg">
+                                    <p>Are you sure you want to delete the graph?</p>
+                                    <input type="checkbox" id="cboRememberChoice" name="cboRememberChoice" /><label for="cboRememberChoice">Don't ask me again</label>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
 
-<div id="playground">
-    
+        <div id="playground" style="position:relative;">
+        </div>
+
+        <button onclick="main()" id="btnRunSimulation"><img src="play-solid.svg" />Run</button>
+    </div>
+      
 </div>
 
+<script>
+//document.body.addEventListener('click', function(e){ alert(e.target.id); });
+//previewFonts("title");
+function addExpand(obj){
+    document.querySelector('.dialog').classList.add('expand');
+    obj.classList.add('expand');
+    obj.querySelector('.x-touch').classList.add('expand');
+}
+
+function removeExpand(){
+    document.querySelector('.dialog').classList.remove('expand');
+    document.querySelector('.dialog > .content').classList.remove('expand');
+    document.querySelector('.dialog .x-touch').classList.remove('expand');
+    event.stopPropagation();
+}
+
+document.getElementById('playground').addEventListener('click', function(e){ alert(e.target.id); });
+</script>
 </body>
 </html>
