@@ -10,6 +10,10 @@ var simulation = {
     zoom: 100
 };
 
+window.onload = function(){
+    main();
+};
+
 function main(){
     graph1 = new Graph("G1", "playground");
     graph1.addNode("A");
@@ -18,22 +22,25 @@ function main(){
 }
 
 function play(){
+    graph1.enableEdit(false);
+    document.getElementById(graph1.container_id).removeEventListener('click', graph1.drag, true);
     simulation.started = true;
 }
 
-function pause(){
+function pause(forcePause){
     var img = document.getElementById('btnPauseSimulation').childNodes[0];
-    if(img.src.includes("pause")){
+    if(forcePause || img.src.includes("pause")){
         img.src = "icons/play.svg";
     }else{
         img.src = "icons/pause.svg";
+        play();
     }
 
     simulation.started = false;
 }
 
 function replay(){
-    simulation.started = true;
+    play();
 }
 
 function zoom(){
@@ -45,12 +52,13 @@ function zoomOut(){
 }
 
 function editGraph(){
-
+    pause(true);
+    graph1.enableEdit(true);
+    document.getElementById(graph1.container_id).addEventListener('click', graph1.drag, true);
 }
 
 function deleteGraph(){
     var dialog = document.getElementById('dialog');
-    
 }
 
 function previewFonts(target){

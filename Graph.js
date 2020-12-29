@@ -13,6 +13,7 @@ function Graph(graph_id, container_id){
     this.edges_components = [];
     this.graph_component = new GraphComponent();
     this.graph_id = graph_id;
+    this.container_id = container_id;
 
     this.edit = false;
     this.dragging = false;
@@ -30,10 +31,15 @@ function Graph(graph_id, container_id){
  * @param {boolean} reset reset output container content before rendering
  */
 Graph.prototype.render = function(container_id, html_string, reset){
+    var wrapper= document.createElement('div');
+    wrapper.innerHTML= html_string;
+    var htmlObject = wrapper.firstChild;
+
     if(reset){
-        document.getElementById(container_id).innerHTML = html_string;
+        document.getElementById(container_id).innerHTML = "";
+        document.getElementById(container_id).appendChild(htmlObject);
     }else{
-        document.getElementById(container_id).innerHTML += html_string;
+        document.getElementById(container_id).appendChild(htmlObject);
     }
 }
 
@@ -133,22 +139,34 @@ Graph.prototype.deleteGraph = function(){
  * Toogle edit mode
  * @param {boolean} edit edit mode
  */
-Graph.prototype.setEdit = function(edit){ this.edit = edit; }
+Graph.prototype.enableEdit = function(edit){ this.edit = edit; }
 
-Graph.prototype.enableDrag = function(){
-    document.getElementById(this.graph_component.id).addEventListener("onclick", function(e){
+
+/**
+ * Public function used to drag/drop objects in graph
+ * @param {event} e
+ */
+Graph.prototype.drag = function(e){
+    console.log("s");
+    alert(e.target.id);
+    /*document.getElementById(this.graph_component.id).addEventListener("onclick", function(e){
         if(this.edit){
             if(this.dragging){ 
                 // object already grab so drop
-                this.drop(e);
+                this.dropObject(e);
             }else{
-                this.drag(e);
+                this.dragObject(e);
             }
         }
-    });
+    });*/
 }
 
-Graph.prototype.drag = function(e){
+
+/**
+ * Private function used to drag of html object
+ * @param {event} e 
+ */
+Graph.prototype.dragObject = function(e){
     // detect if user is trying to drag a node
     var elem = document.elementFromPoint(e.clientX, e.clientY);
     if(elem && elem.className == "node"){
@@ -157,7 +175,12 @@ Graph.prototype.drag = function(e){
     }
 }
 
-Graph.prototype.drop = function(e){
+
+/**
+ * Private function used to drop of html object
+ * @param {event} e 
+ */
+Graph.prototype.dropObject = function(e){
     // detect if there is another element close
     var elem = document.elementFromPoint(e.clientX, e.clientY);
     this.objectDrag = null;
