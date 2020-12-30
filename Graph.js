@@ -144,8 +144,8 @@ Graph.prototype.deleteGraph = function(){
  * @param {event} e
  */
 Graph.prototype.click = function(e){
-   
-    if(e.target.id == this.container_id){
+    
+    if(e.target.id == this.graph_id){
         // create new node
         var node_name = "N" + (++this.nodes_count);
         console.log(e.currentTarget.id);

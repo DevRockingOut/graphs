@@ -21,11 +21,11 @@ function main(){
     var handler = function(e){ graph1.click(e); };
     this.graphClick = handler.bind(this);
 
-    document.getElementById(graph1.container_id).addEventListener('click', this.graphClick);
+    document.getElementById(graph1.graph_id).addEventListener('click', this.graphClick);
 }
 
 function play(){
-    document.getElementById(graph1.container_id).removeEventListener('click', this.graphClick);
+    document.getElementById(graph1.graph_id).removeEventListener('click', this.graphClick);
     simulation.started = true;
 }
 
@@ -42,15 +42,21 @@ function pause(forcePause){
 }
 
 function replay(){
+    var img = document.getElementById('btnPauseSimulation').childNodes[0];
+    img.src = "icons/pause.svg";
     play();
 }
 
 function zoom(){
     simulation.zoom += 10;
+    var container = document.getElementById(graph1.graph_id);
+    container.style.transform = "scale(" + simulation.zoom/100 + ")";
 }
 
 function zoomOut(){
     simulation.zoom -= 10;
+    var container = document.getElementById(graph1.graph_id);
+    container.style.transform = "scale(" + simulation.zoom/100 + ")";
 }
 
 function deleteGraph(){
@@ -62,6 +68,7 @@ function showDialog(obj){
     document.querySelector('.dialog').classList.add('expand');
     obj.classList.add('expand');
     obj.querySelector('.x-touch').classList.add('expand');
+    pause(true);
 }
 
 function closeDialog(){
