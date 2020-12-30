@@ -286,3 +286,36 @@
 .expand .to-contents {
     transform: scale(1);
 }
+
+/*---------Animation and SVGs------------*/
+
+@-webkit-keyframes arcAnim {
+  0% {stroke-dashoffset: 1000;}
+
+  100% {stroke-dashoffset: 0;}
+  
+}
+
+.path1{
+  
+	stroke-dasharray: 1000;
+	stroke-dashoffset: 1000;
+	transition: all 3s;
+}
+
+.path2{
+	stroke-dasharray: 1000;
+	stroke-dashoffset: 1000;
+	/*transition: all 3s;*/
+}
+
+svg:hover .path1{
+  	stroke-dashoffset: 0;
+	-webkit-animation: arcAnim 2s;
+} 
+svg:hover .path2{
+  	/*stroke-dashoffset: 0;*/
+	-webkit-animation: arcAnim 2s;
+	  animation-delay: .38s;
+}
+.textSvg { font: 40px sans-serif;fill: white }

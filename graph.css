@@ -36,11 +36,11 @@
 }
 
 .node {
-    min-height: 50px;
+    /*min-height: 50px;
     min-width: 50px;
     padding:8px;
     background-color: rgb(32, 103, 255);
-    border-radius: 50%;
+    border-radius: 50%;*/
     display: flex;
     justify-content: center;
     align-items: center;
@@ -51,10 +51,32 @@
 }
   
 .edge {
+	position: relative;
     width: 200px;
     height: 7px;
-    background: #C8A962;
-    content: "";
+    background: #000;
+    z-index:-1;
     display: inline-block;
-    vertical-align: middle;
+    /*vertical-align: middle;*/
 }
+
+.edge:before {
+	content: "";
+	position:absolute;
+	width:0px;
+	height:7px;
+	background-color:red;
+	transition: all .5s; 
+	
+}
+
+#G1:hover .edge:before {
+	content: "";
+	position:absolute;
+	width:200px;
+	height:7px;
+	background-color:red;
+	transition: all .5s; 
+	
+}
+

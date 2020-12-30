@@ -65,6 +65,11 @@ Graph.prototype.addNode = function(id, x, y){
     this.graph[id] = [];
     
     this.render(this.graph_id, component, false);
+
+    var node_el = document.getElementById(id);
+    
+    var draggable = new Draggable();
+    draggable.attachListeners(node_el);
 }
 
 
