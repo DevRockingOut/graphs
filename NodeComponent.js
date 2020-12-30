@@ -17,8 +17,7 @@ function NodeComponent(){
 NodeComponent.prototype.create = function(name){
     this.id = name;
     this.name = name;
-    //this.component = "<div id='" + name + "' class='node' style='left: " + this.position.x + "; top: " + this.position.y + ";'>" + name + "</div>";
-	
+
     this.component = '<svg width="200" height="200" id ="'+name+'" class="node" style="left: ' + this.position.x + '; top: ' + this.position.y + ';"> ';
     this.component += '<g><circle cx="100" cy="100" r="80" fill="red" />';
     this.component += '<text x="50%" y="50%" text-anchor="middle" dy=".3em" class="textSvg">'+name+'</text></g>';

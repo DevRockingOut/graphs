@@ -18,10 +18,6 @@ function Graph(graph_id, container_id){
     this.graph_id = graph_id;
     this.container_id = container_id;
 
-    this.edit = false;
-    this.dragging = false;
-    this.objectDrag = null;
-
     var component = this.graph_component.create(graph_id);
     this.render(container_id, component, true);
 }
@@ -68,7 +64,6 @@ Graph.prototype.addNode = function(id, x, y){
     this.nodes_components[id] = node;
     this.graph[id] = [];
     
-    // TODO: calculate position in page where to put node
     this.render(this.graph_id, component, false);
 
     var node_el = document.getElementById(id);
@@ -104,6 +99,7 @@ Graph.prototype.deleteNode = function(id){
     this.nodes_components[id] = null;
     this.graph[id] = [];
     this.remove(id);
+    this.nodes_count -= 1;
 }
 
 
@@ -126,11 +122,12 @@ Graph.prototype.deleteEdge = function(id, from_node){
     }
 
     this.remove(id);
+    this.edges_count -= 1;
 }
 
 
 /**
- * Delete graph instance
+ * Delete graph contents
  */
 Graph.prototype.deleteGraph = function(){
     for(var id in this.edges_components){
@@ -141,98 +138,35 @@ Graph.prototype.deleteGraph = function(){
         this.deleteNode(this.nodes_components[i].id);
     }
 
-    this.graph_component = null;
+    this.nodes_components = [];
+    this.edges_components = [];
+    this.graph = [];
 }
-
-
-/**
- * Toogle edit mode
- * @param {boolean} edit edit mode
- */
-Graph.prototype.enableEdit = function(edit){ this.edit = edit; }
 
 
 /**
  * Public function used to drag/drop objects in graph
  * @param {event} e
  */
-Graph.prototype.drag = function(e){
-    if(this.edit){
-        if(e.target.id == this.container_id){
-            // create new node
-            var node_name = "N" + (++this.nodes_count);
-            
-            var parentPosition = this.getPosition(e.currentTarget);
-            var node_width = 58;  // To change later for responsiveness
-            var x = e.clientX - parentPosition.x - (node_width / 2);
-            var y = e.clientY - parentPosition.y - (node_width / 2);
-
-            this.addNode(node_name, x, y);
-            //graph1.addEdge(1, "A", "B", 2);
-        }else{
-           
-        }
-    }
-}
-
-
-/**
- * Private function used to drag of html object
- * @param {event} e 
- */
-Graph.prototype.dragObject = function(e){
-    //var elem = document.elementFromPoint(e.clientX, e.clientY);
-    this.dragging = true;
-
-    var component = null;
-
-    if(this.objectDrag != null){
-        component = this.objectDrag;
-    }else if(e.target.classList.contains("node")){
-        component = this.nodes_components[e.target.id];
-        this.objectDrag = e.target;
-    }else if(e.target.classList.contains("edge")){
-        component = this.edges_components[e.target.id];
-        this.objectDrag = e.target;
-    }
-
-    var x;
-    var y;
-    if(this.parentPosition){
-        x = e.clientX - this.parentPosition.x - (e.target.offsetWidth / 2);
-        y = e.clientY - this.parentPosition.y - (e.target.offsetHeight / 2);
-    }else{
-        // storing parentPosition to avoid recalculating everytime this function gets called (performance)
-        var parentPosition = this.getPosition(e.currentTarget);
-        this.parentPosition = parentPosition;
-        x = e.clientX - parentPosition.x - (e.target.offsetWidth / 2);
-        y = e.clientY - parentPosition.y - (e.target.offsetHeight / 2);
-    }
+Graph.prototype.click = function(e){
     
-    if(component != null && component !== undefined){
-        component.style.transform = "translate3d("+x+"px,"+y+"px, 0px)";
-    }
-    //component.updatePosition(x, y, e.target);
-}
-
-
-/**
- * Private function used to drop of html object
- * @param {event} e 
- */
-Graph.prototype.dropObject = function(e){
-    //var elem = document.elementFromPoint(e.clientX, e.clientY);
-    if(this.objectDrag && this.objectDrag.classList.contains("node")){
-        var component = this.objectDrag;
+    if(e.target.id == this.graph_id){
+        // create new node
+        var node_name = "N" + (++this.nodes_count);
+        console.log(e.currentTarget.id);
         var parentPosition = this.getPosition(e.currentTarget);
-        var x = e.clientX - parentPosition.x - (component.offsetWidth / 2);
-        var y = e.clientY - parentPosition.y - (component.offsetHeight / 2);
+        var node_width = 58;  // To change later for responsiveness
+        var x = e.clientX - parentPosition.x - (node_width / 2);
+        var y = e.clientY - parentPosition.y - (node_width / 2);
 
-        this.objectDrag = null;
-        component.updatePosition(x, y, this.objectDrag);
-    }
-
-    this.dragging = false;
+        this.addNode(node_name, x, y);
+        
+        var node = document.getElementById(node_name);
+    
+        // enable drag/drop for node
+        var draggable = new Draggable();
+        draggable.attachListeners(node);
+    } 
 }
 
 
