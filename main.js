@@ -16,13 +16,15 @@ window.onload = function(){
 
 function main(){
     graph1 = new Graph("G1", "playground");
-    graph1.addNode("A");
-    graph1.addNode("B");
-    graph1.addEdge(1, "A", "B", 2);
+
+    // storing graphClick needed to remove event listener later
+    var handler = function(e){ graph1.click(e); };
+    this.graphClick = handler.bind(this);
+
+    document.getElementById(graph1.container_id).addEventListener('click', this.graphClick);
 }
 
 function play(){
-    graph1.enableEdit(false);
     document.getElementById(graph1.container_id).removeEventListener('click', this.graphClick);
     simulation.started = true;
 }
@@ -51,19 +53,23 @@ function zoomOut(){
     simulation.zoom -= 10;
 }
 
-function editGraph(){
-    pause(true);
-    graph1.enableEdit(true);
-
-    // storing graphClick to be able to remove event listener later
-    var handler = function(e){ graph1.drag(e); };
-    this.graphClick = handler.bind(this);
-
-    document.getElementById(graph1.container_id).addEventListener('click', this.graphClick);
+function deleteGraph(){
+    graph1.deleteGraph();
+    closeDialog();
 }
 
-function deleteGraph(){
-    var dialog = document.getElementById('dialog');
+function showDialog(obj){
+    document.querySelector('.dialog').classList.add('expand');
+    obj.classList.add('expand');
+    obj.querySelector('.x-touch').classList.add('expand');
+}
+
+function closeDialog(){
+    document.querySelector('.dialog').classList.remove('expand');
+    document.querySelector('.dialog > .content').classList.remove('expand');
+    document.querySelector('.dialog .x-touch').classList.remove('expand');
+    document.getElementById('cboRememberChoice').checked = false;
+    event.stopPropagation();
 }
 
 function previewFonts(target){
