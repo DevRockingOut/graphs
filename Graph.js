@@ -11,6 +11,9 @@ function Graph(graph_id, container_id){
     this.graph = []; // graph[node] = [] (array of edges) 
     this.nodes_components = [];
     this.edges_components = [];
+    this.nodes_count = 0;
+    this.edges_count = 0;
+
     this.graph_component = new GraphComponent();
     this.graph_id = graph_id;
     this.container_id = container_id;
@@ -57,14 +60,21 @@ Graph.prototype.remove = function(id){
  * Add new node to graph
  * @param {string} id node id
  */
-Graph.prototype.addNode = function(id){
+Graph.prototype.addNode = function(id, x, y){
     var node = new NodeComponent();
+    node.updatePosition(x, y);
+
     var component = node.create(id);
     this.nodes_components[id] = node;
     this.graph[id] = [];
     
     // TODO: calculate position in page where to put node
     this.render(this.graph_id, component, false);
+
+    var node_el = document.getElementById(id);
+    
+    var draggable = new Draggable();
+    draggable.attachListeners(node_el);
 }
 
 
@@ -147,18 +157,22 @@ Graph.prototype.enableEdit = function(edit){ this.edit = edit; }
  * @param {event} e
  */
 Graph.prototype.drag = function(e){
-    console.log("s");
-    alert(e.target.id);
-    /*document.getElementById(this.graph_component.id).addEventListener("onclick", function(e){
-        if(this.edit){
-            if(this.dragging){ 
-                // object already grab so drop
-                this.dropObject(e);
-            }else{
-                this.dragObject(e);
-            }
+    if(this.edit){
+        if(e.target.id == this.container_id){
+            // create new node
+            var node_name = "N" + (++this.nodes_count);
+            
+            var parentPosition = this.getPosition(e.currentTarget);
+            var node_width = 58;  // To change later for responsiveness
+            var x = e.clientX - parentPosition.x - (node_width / 2);
+            var y = e.clientY - parentPosition.y - (node_width / 2);
+
+            this.addNode(node_name, x, y);
+            //graph1.addEdge(1, "A", "B", 2);
+        }else{
+           
         }
-    });*/
+    }
 }
 
 
@@ -167,12 +181,38 @@ Graph.prototype.drag = function(e){
  * @param {event} e 
  */
 Graph.prototype.dragObject = function(e){
-    // detect if user is trying to drag a node
-    var elem = document.elementFromPoint(e.clientX, e.clientY);
-    if(elem && elem.className == "node"){
-        this.objectDrag = elem.id;
-        this.dragging = true;
+    //var elem = document.elementFromPoint(e.clientX, e.clientY);
+    this.dragging = true;
+
+    var component = null;
+
+    if(this.objectDrag != null){
+        component = this.objectDrag;
+    }else if(e.target.classList.contains("node")){
+        component = this.nodes_components[e.target.id];
+        this.objectDrag = e.target;
+    }else if(e.target.classList.contains("edge")){
+        component = this.edges_components[e.target.id];
+        this.objectDrag = e.target;
     }
+
+    var x;
+    var y;
+    if(this.parentPosition){
+        x = e.clientX - this.parentPosition.x - (e.target.offsetWidth / 2);
+        y = e.clientY - this.parentPosition.y - (e.target.offsetHeight / 2);
+    }else{
+        // storing parentPosition to avoid recalculating everytime this function gets called (performance)
+        var parentPosition = this.getPosition(e.currentTarget);
+        this.parentPosition = parentPosition;
+        x = e.clientX - parentPosition.x - (e.target.offsetWidth / 2);
+        y = e.clientY - parentPosition.y - (e.target.offsetHeight / 2);
+    }
+    
+    if(component != null && component !== undefined){
+        component.style.transform = "translate3d("+x+"px,"+y+"px, 0px)";
+    }
+    //component.updatePosition(x, y, e.target);
 }
 
 
@@ -181,8 +221,45 @@ Graph.prototype.dragObject = function(e){
  * @param {event} e 
  */
 Graph.prototype.dropObject = function(e){
-    // detect if there is another element close
-    var elem = document.elementFromPoint(e.clientX, e.clientY);
-    this.objectDrag = null;
+    //var elem = document.elementFromPoint(e.clientX, e.clientY);
+    if(this.objectDrag && this.objectDrag.classList.contains("node")){
+        var component = this.objectDrag;
+        var parentPosition = this.getPosition(e.currentTarget);
+        var x = e.clientX - parentPosition.x - (component.offsetWidth / 2);
+        var y = e.clientY - parentPosition.y - (component.offsetHeight / 2);
+
+        this.objectDrag = null;
+        component.updatePosition(x, y, this.objectDrag);
+    }
+
     this.dragging = false;
+}
+
+
+/**
+ * Helper function to get an element's exact position
+ * @param {any} obj Object to move
+ */
+Graph.prototype.getPosition = function(obj){
+    var xPos = 0;
+    var yPos = 0;
+
+    while (obj) {
+        if (obj.tagName == "BODY") {
+            // deal with browser quirks with body/window/document and page scroll
+            var xScroll = obj.scrollLeft || document.documentElement.scrollLeft;
+            var yScroll = obj.scrollTop  || document.documentElement.scrollTop;
+
+            xPos += (obj.offsetLeft - xScroll + obj.clientLeft);
+            yPos += (obj.offsetTop - yScroll + obj.clientTop);
+        } else {
+            // for all other non-BODY elements
+            xPos += (obj.offsetLeft - obj.scrollLeft + obj.clientLeft);
+            yPos += (obj.offsetTop - obj.scrollTop + obj.clientTop);
+        }
+
+        obj = obj.offsetParent;
+    }
+
+    return { x: xPos, y: yPos };
 }

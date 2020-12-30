@@ -23,7 +23,7 @@ function main(){
 
 function play(){
     graph1.enableEdit(false);
-    document.getElementById(graph1.container_id).removeEventListener('click', graph1.drag, true);
+    document.getElementById(graph1.container_id).removeEventListener('click', this.graphClick);
     simulation.started = true;
 }
 
@@ -54,7 +54,12 @@ function zoomOut(){
 function editGraph(){
     pause(true);
     graph1.enableEdit(true);
-    document.getElementById(graph1.container_id).addEventListener('click', graph1.drag, true);
+
+    // storing graphClick to be able to remove event listener later
+    var handler = function(e){ graph1.drag(e); };
+    this.graphClick = handler.bind(this);
+
+    document.getElementById(graph1.container_id).addEventListener('click', this.graphClick);
 }
 
 function deleteGraph(){
