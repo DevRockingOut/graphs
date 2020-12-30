@@ -7,6 +7,7 @@
     <script type="text/javascript" src="NodeComponent.js"></script>
     <script type="text/javascript" src="EdgeComponent.js"></script>
     <script type="text/javascript" src="Graph.js"></script>
+    <script type="text/javascript" src="Draggable.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <link rel="stylesheet" href="graph.css" />
     <link rel="stylesheet" href="styles.css" />
@@ -41,11 +42,8 @@
                 <button onclick="pause()" id="btnPauseSimulation" class="menu btn-action"><img src="icons/pause.svg" /></button>
                 <button onclick="zoom()" id="btnZoom" class="menu btn-action"><img src="icons/zoom.svg" /></button>
                 <button onclick="zoomOut()" id="btnZoomOut" class="menu btn-action"><img src="icons/zoom_out.svg" /></button>
-            </div>
-            <div id="right">
-                <button onclick="editGraph()" id="btnEditGraph" class="menu btn-action"><img src="icons/edit.svg" /></button>
                 <div class="dialog">
-                    <div class="content" onclick="addExpand(this)">
+                    <div class="content" onclick="showDialog(this)">
                       <div class="from">
                         <div class="from-contents">
                           <div class="title"><img src="icons/delete.svg" /></div>
@@ -55,7 +53,7 @@
                         <div class="to-contents">
                           <div class="top">
                             <div class="title-large">Confirmation</div>
-                            <div class="x-touch" onclick="removeExpand()">
+                            <div class="x-touch" onclick="closeDialog()">
                               <div class="x">
                                 <div class="line1"></div>
                                 <div class="line2"></div>
@@ -72,7 +70,7 @@
                             <div class="row">
                               <div id="actions">
                                 <button id="btnDeleteGraph" onclick="deleteGraph()">DELETE</button>
-                                <button id="btnCancel" onclick="removeExpand()">CANCEL</button>
+                                <button id="btnCancel" onclick="closeDialog()">CANCEL</button>
                               </div>
                             </div>
                           </div>
@@ -94,21 +92,6 @@
 <script>
 //document.body.addEventListener('click', function(e){ alert(e.target.id); });
 //previewFonts("title");
-function addExpand(obj){
-    document.querySelector('.dialog').classList.add('expand');
-    obj.classList.add('expand');
-    obj.querySelector('.x-touch').classList.add('expand');
-}
-
-function removeExpand(){
-    document.querySelector('.dialog').classList.remove('expand');
-    document.querySelector('.dialog > .content').classList.remove('expand');
-    document.querySelector('.dialog .x-touch').classList.remove('expand');
-    document.getElementById('cboRememberChoice').checked = false;
-    event.stopPropagation();
-}
-
-document.getElementById('playground').addEventListener('click', function(e){ alert(e.target.id); });
 </script>
 </body>
 </html>

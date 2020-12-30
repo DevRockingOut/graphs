@@ -11,12 +11,12 @@ function Graph(graph_id, container_id){
     this.graph = []; // graph[node] = [] (array of edges) 
     this.nodes_components = [];
     this.edges_components = [];
+    this.nodes_count = 0;
+    this.edges_count = 0;
+
     this.graph_component = new GraphComponent();
     this.graph_id = graph_id;
-
-    this.edit = false;
-    this.dragging = false;
-    this.objectDrag = null;
+    this.container_id = container_id;
 
     var component = this.graph_component.create(graph_id);
     this.render(container_id, component, true);
@@ -30,10 +30,15 @@ function Graph(graph_id, container_id){
  * @param {boolean} reset reset output container content before rendering
  */
 Graph.prototype.render = function(container_id, html_string, reset){
+    var wrapper= document.createElement('div');
+    wrapper.innerHTML= html_string;
+    var htmlObject = wrapper.firstChild;
+
     if(reset){
-        document.getElementById(container_id).innerHTML = html_string;
+        document.getElementById(container_id).innerHTML = "";
+        document.getElementById(container_id).appendChild(htmlObject);
     }else{
-        document.getElementById(container_id).innerHTML += html_string;
+        document.getElementById(container_id).appendChild(htmlObject);
     }
 }
 
@@ -51,13 +56,14 @@ Graph.prototype.remove = function(id){
  * Add new node to graph
  * @param {string} id node id
  */
-Graph.prototype.addNode = function(id){
+Graph.prototype.addNode = function(id, x, y){
     var node = new NodeComponent();
+    node.updatePosition(x, y);
+
     var component = node.create(id);
     this.nodes_components[id] = node;
     this.graph[id] = [];
     
-    // TODO: calculate position in page where to put node
     this.render(this.graph_id, component, false);
 }
 
@@ -88,6 +94,7 @@ Graph.prototype.deleteNode = function(id){
     this.nodes_components[id] = null;
     this.graph[id] = [];
     this.remove(id);
+    this.nodes_count -= 1;
 }
 
 
@@ -110,11 +117,12 @@ Graph.prototype.deleteEdge = function(id, from_node){
     }
 
     this.remove(id);
+    this.edges_count -= 1;
 }
 
 
 /**
- * Delete graph instance
+ * Delete graph contents
  */
 Graph.prototype.deleteGraph = function(){
     for(var id in this.edges_components){
@@ -125,41 +133,62 @@ Graph.prototype.deleteGraph = function(){
         this.deleteNode(this.nodes_components[i].id);
     }
 
-    this.graph_component = null;
+    this.nodes_components = [];
+    this.edges_components = [];
+    this.graph = [];
 }
 
 
 /**
- * Toogle edit mode
- * @param {boolean} edit edit mode
+ * Public function used to drag/drop objects in graph
+ * @param {event} e
  */
-Graph.prototype.setEdit = function(edit){ this.edit = edit; }
+Graph.prototype.click = function(e){
+    
+    if(e.target.id == this.graph_id){
+        // create new node
+        var node_name = "N" + (++this.nodes_count);
+        console.log(e.currentTarget.id);
+        var parentPosition = this.getPosition(e.currentTarget);
+        var node_width = 58;  // To change later for responsiveness
+        var x = e.clientX - parentPosition.x - (node_width / 2);
+        var y = e.clientY - parentPosition.y - (node_width / 2);
 
-Graph.prototype.enableDrag = function(){
-    document.getElementById(this.graph_component.id).addEventListener("onclick", function(e){
-        if(this.edit){
-            if(this.dragging){ 
-                // object already grab so drop
-                this.drop(e);
-            }else{
-                this.drag(e);
-            }
+        this.addNode(node_name, x, y);
+        
+        var node = document.getElementById(node_name);
+    
+        // enable drag/drop for node
+        var draggable = new Draggable();
+        draggable.attachListeners(node);
+    } 
+}
+
+
+/**
+ * Helper function to get an element's exact position
+ * @param {any} obj Object to move
+ */
+Graph.prototype.getPosition = function(obj){
+    var xPos = 0;
+    var yPos = 0;
+
+    while (obj) {
+        if (obj.tagName == "BODY") {
+            // deal with browser quirks with body/window/document and page scroll
+            var xScroll = obj.scrollLeft || document.documentElement.scrollLeft;
+            var yScroll = obj.scrollTop  || document.documentElement.scrollTop;
+
+            xPos += (obj.offsetLeft - xScroll + obj.clientLeft);
+            yPos += (obj.offsetTop - yScroll + obj.clientTop);
+        } else {
+            // for all other non-BODY elements
+            xPos += (obj.offsetLeft - obj.scrollLeft + obj.clientLeft);
+            yPos += (obj.offsetTop - obj.scrollTop + obj.clientTop);
         }
-    });
-}
 
-Graph.prototype.drag = function(e){
-    // detect if user is trying to drag a node
-    var elem = document.elementFromPoint(e.clientX, e.clientY);
-    if(elem && elem.className == "node"){
-        this.objectDrag = elem.id;
-        this.dragging = true;
+        obj = obj.offsetParent;
     }
-}
 
-Graph.prototype.drop = function(e){
-    // detect if there is another element close
-    var elem = document.elementFromPoint(e.clientX, e.clientY);
-    this.objectDrag = null;
-    this.dragging = false;
+    return { x: xPos, y: yPos };
 }

@@ -10,47 +10,73 @@ var simulation = {
     zoom: 100
 };
 
+window.onload = function(){
+    main();
+};
+
 function main(){
     graph1 = new Graph("G1", "playground");
-    graph1.addNode("A");
-    graph1.addNode("B");
-    graph1.addEdge(1, "A", "B", 2);
+
+    // storing graphClick needed to remove event listener later
+    var handler = function(e){ graph1.click(e); };
+    this.graphClick = handler.bind(this);
+
+    document.getElementById(graph1.graph_id).addEventListener('click', this.graphClick);
 }
 
 function play(){
+    document.getElementById(graph1.graph_id).removeEventListener('click', this.graphClick);
     simulation.started = true;
 }
 
-function pause(){
+function pause(forcePause){
     var img = document.getElementById('btnPauseSimulation').childNodes[0];
-    if(img.src.includes("pause")){
+    if(forcePause || img.src.includes("pause")){
         img.src = "icons/play.svg";
     }else{
         img.src = "icons/pause.svg";
+        play();
     }
 
     simulation.started = false;
 }
 
 function replay(){
-    simulation.started = true;
+    var img = document.getElementById('btnPauseSimulation').childNodes[0];
+    img.src = "icons/pause.svg";
+    play();
 }
 
 function zoom(){
     simulation.zoom += 10;
+    var container = document.getElementById(graph1.graph_id);
+    container.style.transform = "scale(" + simulation.zoom/100 + ")";
 }
 
 function zoomOut(){
     simulation.zoom -= 10;
-}
-
-function editGraph(){
-
+    var container = document.getElementById(graph1.graph_id);
+    container.style.transform = "scale(" + simulation.zoom/100 + ")";
 }
 
 function deleteGraph(){
-    var dialog = document.getElementById('dialog');
-    
+    graph1.deleteGraph();
+    closeDialog();
+}
+
+function showDialog(obj){
+    document.querySelector('.dialog').classList.add('expand');
+    obj.classList.add('expand');
+    obj.querySelector('.x-touch').classList.add('expand');
+    pause(true);
+}
+
+function closeDialog(){
+    document.querySelector('.dialog').classList.remove('expand');
+    document.querySelector('.dialog > .content').classList.remove('expand');
+    document.querySelector('.dialog .x-touch').classList.remove('expand');
+    document.getElementById('cboRememberChoice').checked = false;
+    event.stopPropagation();
 }
 
 function previewFonts(target){

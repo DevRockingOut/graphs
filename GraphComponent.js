@@ -14,7 +14,7 @@ function GraphComponent(id){
  */
 GraphComponent.prototype.create = function(id){
     this.id = id;
-    this.component = "<div id='" + id + "'></div>";
+    this.component = "<div id='" + id + "' class='graph'></div>";
     return this.component;
 }
 
