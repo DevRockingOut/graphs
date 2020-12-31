@@ -71,7 +71,7 @@
     margin-right:12px;
 }
 
-/***** Dialog styles *****/
+/*---------Dialog styles------------*/
 .dialog {
     align-items: center;
     display: flex;
@@ -287,20 +287,85 @@
     transform: scale(1);
 }
 
+/*---------Edit node dialog------------*/
+.dialog#editNodeDialog {
+    display:none;
+}
+
+.dialog#editNodeDialog .content{
+    height:30px;
+}
+
+.dialog#editNodeDialog .content.expand{
+    height:186px;
+}
+
+.dialog#editNodeDialog .bottom {
+    height:126px;
+}
+
+.dialog#editNodeDialog .top {
+    background-color:white;
+}
+
+.dialog#editNodeDialog .line1, .dialog#editNodeDialog .line2 {
+    background:white;
+}
+
+.dialog#editNodeDialog .x {
+    background: #0188CC;
+}
+
+.dialog #nodeOptions {
+    width:100%;
+    margin-right:20px;
+    margin-left:20px;
+    font-size:14px;
+}
+
+.dialog #changeName {
+    width:75%;
+    margin-top:5px;
+    padding-bottom:2px;
+    border-top:none;
+    border-right:none;
+    border-left:none;
+    outline:none;
+    font-size:15px;
+    font-family:OpenSans;
+}
+
+.dialog #btnAddEdge {
+    display:block;
+    margin:0 auto;
+    margin-top:30px;
+    padding:5px 20px 5px 20px;
+    border:none;
+    border:2px solid #0188CC;
+    background-color:transparent;
+    color:#0188CC;
+    font-size:14px;
+    border-radius:3px;
+    font-family:OpenSans;
+    outline:none;
+}
+
+#editNodeDialog .title img{
+    width:26px;
+}
+
 /*---------Animation and SVGs------------*/
 
 @-webkit-keyframes arcAnim {
   0% {stroke-dashoffset: 1000;}
 
   100% {stroke-dashoffset: 0;}
-  
 }
 
 .path1{
-  
 	stroke-dasharray: 1000;
 	stroke-dashoffset: 1000;
-	transition: all 3s;
+	/*transition: all 3s;*/
 }
 
 .path2{
@@ -309,13 +374,23 @@
 	/*transition: all 3s;*/
 }
 
-svg:hover .path1{
+.path1.animate{
   	stroke-dashoffset: 0;
 	-webkit-animation: arcAnim 2s;
 } 
-svg:hover .path2{
+.path2.animate{
   	/*stroke-dashoffset: 0;*/
 	-webkit-animation: arcAnim 2s;
 	  animation-delay: .38s;
 }
+
+.path2.dashoffset {
+    stroke-dashoffset: 0;
+}
+
+.path1.initial, .path2.initial{
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+}
+
 .textSvg { font: 40px sans-serif;fill: white }

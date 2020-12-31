@@ -36,57 +36,83 @@
 </div>
 -->
     <div class="content">
-        <div id="graphMenu">
-            <div id="left">
-                <button onclick="replay()" id="btnReplaySimulation" class="menu btn-action"><img src="icons/replay.svg" /></button>
-                <button onclick="pause()" id="btnPauseSimulation" class="menu btn-action"><img src="icons/pause.svg" /></button>
-                <button onclick="zoom()" id="btnZoom" class="menu btn-action"><img src="icons/zoom.svg" /></button>
-                <button onclick="zoomOut()" id="btnZoomOut" class="menu btn-action"><img src="icons/zoom_out.svg" /></button>
-                <div class="dialog">
-                    <div class="content" onclick="showDialog(this)">
-                      <div class="from">
-                        <div class="from-contents">
-                          <div class="title"><img src="icons/delete.svg" /></div>
+      <div id="graphMenu">
+          <div id="left">
+            <button onclick="replay()" id="btnReplaySimulation" class="menu btn-action"><img src="icons/replay.svg" /></button>
+            <button onclick="pause()" id="btnPauseSimulation" class="menu btn-action"><img src="icons/play.svg" /></button>
+            <button onclick="zoom()" id="btnZoom" class="menu btn-action"><img src="icons/zoom.svg" /></button>
+            <button onclick="zoomOut()" id="btnZoomOut" class="menu btn-action"><img src="icons/zoom_out.svg" /></button>
+            <div class="dialog">
+                <div class="content" onclick="showDialog(this)">
+                  <div class="from">
+                    <div class="from-contents">
+                      <div class="title"><img src="icons/delete.svg" /></div>
+                    </div>
+                  </div>
+                  <div class="to">
+                    <div class="to-contents">
+                      <div class="top">
+                        <div class="title-large">Confirmation</div>
+                        <div class="x-touch" onclick="closeDialog(this)">
+                          <div class="x">
+                            <div class="line1"></div>
+                            <div class="line2"></div>
+                          </div>
                         </div>
                       </div>
-                      <div class="to">
-                        <div class="to-contents">
-                          <div class="top">
-                            <div class="title-large">Confirmation</div>
-                            <div class="x-touch" onclick="closeDialog()">
-                              <div class="x">
-                                <div class="line1"></div>
-                                <div class="line2"></div>
-                              </div>
-                            </div>
+                      <div class="bottom">
+                        <div class="row">
+                          <div id="msg">
+                              <p>Are you sure you want to delete the graph?</p>
+                              <input type="checkbox" id="cboRememberChoice" name="cboRememberChoice" /><label for="cboRememberChoice">Don't ask me again</label>
                           </div>
-                          <div class="bottom">
-                            <div class="row">
-                              <div id="msg">
-                                  <p>Are you sure you want to delete the graph?</p>
-                                  <input type="checkbox" id="cboRememberChoice" name="cboRememberChoice" /><label for="cboRememberChoice">Don't ask me again</label>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div id="actions">
-                                <button id="btnDeleteGraph" onclick="deleteGraph()">DELETE</button>
-                                <button id="btnCancel" onclick="closeDialog()">CANCEL</button>
-                              </div>
-                            </div>
+                        </div>
+                        <div class="row">
+                          <div id="actions">
+                            <button id="btnDeleteGraph" onclick="deleteGraph(this)">DELETE</button>
+                            <button id="btnCancel" onclick="closeDialog(this)">CANCEL</button>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
+                </div>
             </div>
+            <div class="dialog" id="editNodeDialog">
+              <div class="content" onclick="showDialog(this)">
+                <div class="from">
+                  <div class="from-contents">
+                    <div class="title"><img src="icons/options.svg" /></div>
+                  </div>
+                </div>
+                <div class="to">
+                  <div class="to-contents">
+                    <div class="top">
+                      <div class="x-touch" onclick="closeDialog(this)">
+                        <div class="x">
+                          <div class="line1"></div>
+                          <div class="line2"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="bottom">
+                      <div class="row">
+                        <div id="nodeOptions">
+                          Change name<br/>
+                          <input type="text" id="changeName" /><br/>
+                          <button id="btnAddEdge">Add edge</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
         </div>
-
-        <div id="playground" style="position:relative;">
-        </div>
-
-        <button onclick="main()" id="btnRunSimulation"><img src="play-solid.svg" />Run</button>
     </div>
-      
+
+    <div id="playground" style="position:relative;">
+    </div>
 </div>
 
 <script>

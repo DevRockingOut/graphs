@@ -6,7 +6,8 @@ function algoSelected(value){
 
 var graph1;
 var simulation = {
-    started: false,
+    play: false,
+    pause: false,
     zoom: 100
 };
 
@@ -25,26 +26,32 @@ function main(){
 }
 
 function play(){
-    document.getElementById(graph1.graph_id).removeEventListener('click', this.graphClick);
-    simulation.started = true;
+    //document.getElementById(graph1.graph_id).removeEventListener('click', this.graphClick);
+    simulation.play = true;
+    simulation.pause = false;
+    graph1.animate();
 }
 
 function pause(forcePause){
     var img = document.getElementById('btnPauseSimulation').childNodes[0];
     if(forcePause || img.src.includes("pause")){
         img.src = "icons/play.svg";
+        simulation.play = false;
+        simulation.pause = true;
+        graph1.animate();
     }else{
         img.src = "icons/pause.svg";
         play();
     }
-
-    simulation.started = false;
 }
 
 function replay(){
     var img = document.getElementById('btnPauseSimulation').childNodes[0];
     img.src = "icons/pause.svg";
-    play();
+    simulation.replay = true;
+    simulation.play = false;
+    simulation.pause = false;
+    graph1.animate();
 }
 
 function zoom(){
@@ -59,23 +66,28 @@ function zoomOut(){
     container.style.transform = "scale(" + simulation.zoom/100 + ")";
 }
 
-function deleteGraph(){
+function deleteGraph(obj){
     graph1.deleteGraph();
-    closeDialog();
+    closeDialog(obj);
 }
 
 function showDialog(obj){
-    document.querySelector('.dialog').classList.add('expand');
+    obj.parentElement.classList.add('expand');
     obj.classList.add('expand');
     obj.querySelector('.x-touch').classList.add('expand');
     pause(true);
 }
 
-function closeDialog(){
-    document.querySelector('.dialog').classList.remove('expand');
-    document.querySelector('.dialog > .content').classList.remove('expand');
-    document.querySelector('.dialog .x-touch').classList.remove('expand');
-    document.getElementById('cboRememberChoice').checked = false;
+function closeDialog(obj){
+    var dialog = obj.closest(".dialog");
+    dialog.classList.remove('expand');
+    dialog.querySelector('.content').classList.remove('expand');
+    dialog.querySelector('.x-touch').classList.remove('expand');
+    
+    if(dialog.querySelector('#cboRememberChoice')){
+        dialog.querySelector('#cboRememberChoice').checked = false;
+    }
+
     event.stopPropagation();
 }
 

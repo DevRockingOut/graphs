@@ -1,37 +1,49 @@
-var G = G || {};
+/*var G = G || {};
 G.H = [];
 G.graph = [];
 G.start_node = "a";
-G.end_node = "k";
+G.end_node = "k";*/
 
-G.parseHeuristics = function(heuristics){
+function SearchAlgorithms(){
+    this.G = {};
+    this.H = [];
+    this.start_node = null;
+    this.end_node = null;
+}
+
+SearchAlgorithms.prototype.setGraph = function(graph){ this.G = graph; }
+SearchAlgorithms.prototype.setHeuristics = function(heuristics){ this.H = heuristics; }
+SearchAlgorithms.prototype.setStartNode = function(start_node){ this.start_node = start_node; }
+SearchAlgorithms.prototype.setEndNode = function(end_node){ this.end_node = end_node; }
+
+SearchAlgorithms.prototype.parseHeuristics = function(heuristics){
     var H_arr = heuristics.split("\n");
     
     for(var i in H_arr){
         var parts = H_arr[i].split("=");
         var name = parts[0].replace("H(", "").replace(")", "").trim();
 
-        G.H[name] = parseInt(parts[1]);
+        this.G.H[name] = parseInt(parts[1]);
     }
 }
 
-G.parseGraph = function(value){
+SearchAlgorithms.prototype.parseGraph = function(value){
     var arr = [];
 
-    G.graph = [];
+    this.G.graph = [];
     arr = value.split("\n");
 
     for(var i in arr){
         var edge = arr[i].split(",");
         var node_from =  edge[0].trim();
 
-        if(G.graph[node_from]){
-            G.graph[node_from].push({
+        if(this.G.graph[node_from]){
+            this.G.graph[node_from].push({
                 node_to: edge[1].trim(),
                 cost: parseInt(edge[2].trim())
             });
         }else{
-            G.graph[node_from] = [{
+            this.G.graph[node_from] = [{
                 node_to: edge[1].trim(),
                 cost: parseInt(edge[2].trim())
             }];
@@ -39,17 +51,17 @@ G.parseGraph = function(value){
     }
 }
 
-G.BestFirstSearch = function(){
+SearchAlgorithms.prototype.BestFirstSearch = function(){
     // saved frontier for print
     var frontier_trace = [];
 
-    var current_node = G.start_node;
+    var current_node = this.G.start_node;
     frontier_trace.push(current_node);
 
-    while(current_node != G.end_node && current_node != null){
+    while(current_node != this.G.end_node && current_node != null){
         // add node to frontier
         //frontier_trace.push(current_node);
-        var children = G.graph[current_node];
+        var children = this.G.graph[current_node];
         
         // add child nodes to frontier
         var min_child = null;
@@ -63,10 +75,10 @@ G.BestFirstSearch = function(){
                 frontier_trace.push(children[i].node_to);
             }
 
-            if(children[i].node_to == G.end_node){
+            if(children[i].node_to == this.G.end_node){
                 min_child = children[i];
                 break;
-            }else if(G.H[children[i].node_to] < G.H[min_child.node_to]){
+            }else if(this.G.H[children[i].node_to] < this.G.H[min_child.node_to]){
                 min_child = children[i];
             }
         }
@@ -88,7 +100,7 @@ G.BestFirstSearch = function(){
 	return s;
 }
 
-G.BreadthFirstSearch = function(){
+SearchAlgorithms.prototype.BreadthFirstSearch = function(){
     // saved frontier for print
     var frontier_trace = [];
 
@@ -96,15 +108,15 @@ G.BreadthFirstSearch = function(){
     var frontier = [];
 
     // add starting node to frontier
-    frontier_trace.push(G.start_node);
-    frontier.push(G.start_node);
+    frontier_trace.push(this.G.start_node);
+    frontier.push(this.G.start_node);
 
     var current_node = "";
-    while(current_node != G.end_node){
+    while(current_node != this.G.end_node){
         // remove first node
         current_node = frontier.shift();
        
-        var children = G.graph[current_node];
+        var children = this.G.graph[current_node];
 
         // add child nodes to frontier
         for(var i in children){
@@ -122,7 +134,7 @@ G.BreadthFirstSearch = function(){
 	return s;
 }
 
-G.DepthFirstSearch = function(){
+SearchAlgorithms.prototype.DepthFirstSearch = function(){
     // saved frontier for print
     var frontier_trace = [];
 
@@ -130,15 +142,15 @@ G.DepthFirstSearch = function(){
     var frontier = [];
 
     // add starting node to frontier
-    frontier_trace.push(G.start_node);
-    frontier.push(G.start_node);
+    frontier_trace.push(this.G.start_node);
+    frontier.push(this.G.start_node);
 
     var current_node = "";
-    while(current_node != G.end_node){
+    while(current_node != this.G.end_node){
         // remove last node
         current_node = frontier.pop();
        
-        var children = G.graph[current_node];
+        var children = this.G.graph[current_node];
 
         // add child nodes to frontier
         for(var i in children){
@@ -156,22 +168,22 @@ G.DepthFirstSearch = function(){
 	return s;
 }
 
-G.LowestCostFirstSearch = function(){
-    var graph_copy = G.graph;
+SearchAlgorithms.prototype.LowestCostFirstSearch = function(){
+    var graph_copy = this.G.graph;
 
     // saved frontier for print
     var frontier_trace = [];
 
     var frontier = PriorityQueue();
 
-    var current_node = G.start_node;
+    var current_node = this.G.start_node;
 
     // add starting node to frontier
-    frontier_trace.push(G.start_node);
-    frontier.enqueue(G.start_node, 0);
+    frontier_trace.push(this.G.start_node);
+    frontier.enqueue(this.G.start_node, 0);
 
     var current_node = "";
-    while(current_node != G.end_node){
+    while(current_node != this.G.end_node){
         // remove node
         current_node = frontier.dequeue();
    
@@ -204,15 +216,15 @@ G.LowestCostFirstSearch = function(){
 	return s;
 }
 
-G.GreedySearch = function(){
+SearchAlgorithms.prototype.GreedySearch = function(){
     // saved frontier for print
     var frontier_trace = [];
 
-    var current_node = G.start_node;
-    while(current_node != G.end_node && current_node != null){
+    var current_node = this.G.start_node;
+    while(current_node != this.G.end_node && current_node != null){
         // add node to frontier
         frontier_trace.push(current_node);
-        var children = G.graph[current_node];
+        var children = this.G.graph[current_node];
         
         // add child nodes to frontier
         var min_child = null;
@@ -224,7 +236,7 @@ G.GreedySearch = function(){
         if(min_child == null) console.log(current_node);
 
         for(var i in children){
-            if(children[i].node_to == G.end_node){
+            if(children[i].node_to == this.G.end_node){
                 min_child = children[i];
                 break;
             }else if(children[i].cost < min_child.cost){
@@ -249,22 +261,22 @@ G.GreedySearch = function(){
 	return s;
 }
 
-G.AStarSearch = function(){
-    var graph_copy = G.graph;
+SearchAlgorithms.prototype.AStarSearch = function(){
+    var graph_copy = this.G.graph;
 
     // saved frontier for print
     var frontier_trace = [];
 
     var frontier = PriorityQueue();
 
-    var current_node = G.start_node;
+    var current_node = this.G.start_node;
 
     // add starting node to frontier
-    frontier_trace.push(G.start_node);
-    frontier.enqueue(G.start_node, 0);
+    frontier_trace.push(this.G.start_node);
+    frontier.enqueue(this.G.start_node, 0);
 
     var current_node = "";
-    while(current_node != G.end_node){
+    while(current_node != this.G.end_node){
         // remove node with lowest cost
         current_node = frontier.dequeue();
         
@@ -278,7 +290,7 @@ G.AStarSearch = function(){
                 frontier_trace.push(children[i].node_to);
                 
                 //console.log(current_node + "   " + children[i].node_to);
-                children[i].cost = children[i].cost + G.H[children[i].node_to];
+                children[i].cost = children[i].cost + this.G.H[children[i].node_to];
                 frontier.enqueue(children[i].node_to, children[i].cost);
 
                 // update paths cost
@@ -296,13 +308,15 @@ G.AStarSearch = function(){
 	return s;
 }
 
-G.run = function(){
+SearchAlgorithms.prototype.run = function(){
 	var result = document.getElementById("result");
 	
-	result.innerHTML = G.DepthFirstSearch() + "<br /><br />" + G.BreadthFirstSearch() +
-					"<br /><br />" + G.BestFirstSearch() + "<br /><br />" +
-					G.GreedySearch() + "<br /><br />" + G.LowestCostFirstSearch() +
-					"<br /><br />" + G.AStarSearch();;
+	result = this.G.DepthFirstSearch() + "<br /><br />" + this.G.BreadthFirstSearch() +
+                "<br /><br />" + this.G.BestFirstSearch() + "<br /><br />" +
+                this.G.GreedySearch() + "<br /><br />" + this.G.LowestCostFirstSearch() +
+                "<br /><br />" + this.G.AStarSearch();
+                    
+    console.log(result);
 }
 
 /*

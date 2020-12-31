@@ -153,7 +153,6 @@ Graph.prototype.click = function(e){
     if(e.target.id == this.graph_id){
         // create new node
         var node_name = "N" + (++this.nodes_count);
-        console.log(e.currentTarget.id);
         var parentPosition = this.getPosition(e.currentTarget);
         var node_width = 58;  // To change later for responsiveness
         var x = e.clientX - parentPosition.x - (node_width / 2);
@@ -166,7 +165,11 @@ Graph.prototype.click = function(e){
         // enable drag/drop for node
         var draggable = new Draggable();
         draggable.attachListeners(node);
-    } 
+    } else if(e.target.classList.contains("node")){
+        // add nodes options (move?, change node name, add edge -> from/to)
+    } else if(e.target.classList.contains("edges")){
+        // add nodes options (change node name, change edge -> from/to)
+    }
 }
 
 
@@ -196,4 +199,107 @@ Graph.prototype.getPosition = function(obj){
     }
 
     return { x: xPos, y: yPos };
+}
+
+Graph.prototype.animate = function(node){
+    console.log("here");
+    if(simulation.pause){
+        // pause animation
+        var path1 = document.querySelectorAll(".path1");
+        var path2 = document.querySelectorAll(".path2");
+        
+        for(var i = 0; i < path1.length; i++){
+            /*var computedStyle = window.getComputedStyle(path1[i]);
+            var computedStyle2 = window.getComputedStyle(path2[i]);
+
+            var dashArray = computedStyle.getPropertyValue('stroke-dasharray');
+            var dashOffset = computedStyle.getPropertyValue('stroke-dashoffset');
+            var dashArray2 = computedStyle2.getPropertyValue('stroke-dasharray');
+            var dashOffset2 = computedStyle2.getPropertyValue('stroke-dashoffset');
+
+            path1[i].style.strokeDasharray = dashArray;
+            path1[i].style.strokeDashoffset = dashOffset;
+            path2[i].style.strokeDasharray = dashArray2;
+            path2[i].style.strokeDashoffset = dashOffset2;*/
+             
+            if (path1[i].style.webkitAnimationPlayState == 'running' || path1[i].style.webkitAnimationPlayState == '') {
+                path1[i].style.webkitAnimationPlayState = 'paused';
+                path2[i].style.webkitAnimationPlayState = 'paused';
+            }
+        }
+
+    }else if(simulation.play){
+        // play animation
+        if(node){
+            var path1 = node.querySelector(".path1");
+            var path2 = node.querySelector(".path2");
+
+            if(path1.style.webkitAnimationPlayState == "paused"){
+                // resume animation
+                path1.style.webkitAnimationPlayState = "running";
+                path2.style.webkitAnimationPlayState = "ru  nning";
+            }else{
+                // play new animation
+                path1.classList.add("animate");
+                path2.classList.add("animate");
+            }
+        }else{
+            console.log("1");
+            for(var id in this.nodes_components){
+                var path1 = document.getElementById(id).querySelector(".path1");
+                var path2 = document.getElementById(id).querySelector(".path2");
+
+                if(path1.style.webkitAnimationPlayState == "paused"){
+                    // resume animation
+                    path1.style.webkitAnimationPlayState = "running";
+                    path2.style.webkitAnimationPlayState = "running";
+                    console.log("2");
+                }else{
+                    // play new animation
+                    path1.classList.add("animate");
+                    path2.classList.add("animate");
+                    setTimeout(function(){
+                        path2.classList.add("dashoffset");
+                    }, 380);
+                    console.log("3");
+                }
+            }
+            
+        }
+    }else if(simulation.replay){
+        //var animate = document.querySelector(".animate");
+        var path1 = document.querySelector(".path1");
+        var path2 = document.querySelector(".path2");
+
+        path1.classList.remove("animate");
+        path2.classList.remove("animate");
+        path1.classList.add("initial");
+        path2.classList.add("initial");
+
+        setTimeout(function(){
+            path1.classList.add("animate");
+            path2.classList.add("animate");
+
+            path1.style.webkitAnimationPlayState = "running";
+            path2.style.webkitAnimationPlayState = "running";
+
+            path1.classList.remove("initial");
+            setTimeout(function(){
+                path2.classList.remove("initial");
+            }, 380);
+        }, 10);
+
+        /*for(var i = 0; i < animate.length; i++){
+            animate[i].style.webkitAnimationName = "none";
+
+            animate[i].classList.remove("animate");
+            animate[i].classList.remove("dashoffset");
+        }
+
+        var that = this;
+        setTimeout(function() {
+            simulation.play = true;
+            that.animate();
+        }, 10);*/
+    }
 }
