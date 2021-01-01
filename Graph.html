@@ -46,7 +46,7 @@
             <div id="editOptions">
               <div id="menuEdit">
                 <button onclick="addNode()" id="btnAddNode" class="menu btn-action hide"><img src="icons/add.svg" /></button>
-                <button onclick="addEdge()" id="btnAddEdge" class="menu btn-action hide"><img src="icons/edit.svg" /></button>
+                <button onclick="addEdge()" id="btnAddEdge" class="menu btn-action hide"><img src="icons/edge.svg" /></button>
                 <div class="dialog hide" id="deleteDialog">
                     <div class="content" onclick="showDialog(this)">
                       <div class="from">
@@ -85,40 +85,41 @@
                 </div>
               </div>
             </div>
-            <div class="dialog" id="editNodeDialog">
-              <div class="content" onclick="showDialog(this)">
-                <div class="from">
-                  <div class="from-contents">
-                    <div class="title"><img src="icons/options.svg" /></div>
-                  </div>
-                </div>
-                <div class="to">
-                  <div class="to-contents">
-                    <div class="top">
-                      <div class="x-touch" onclick="closeDialog(this)">
-                        <div class="x">
-                          <div class="line1"></div>
-                          <div class="line2"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="bottom">
-                      <div class="row">
-                        <div id="nodeOptions">
-                          Change name<br/>
-                          <input type="text" id="changeName" /><br/>
-                          <button id="btnDeleteNode" onclick="deleteNode(this)">Delete node</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          </div>
         </div>
     </div>
 
     <div id="playground" style="position:relative;">
+    </div>
+
+    <div class="dialog" id="editNodeDialog">
+      <div class="content" onclick="showDialog(this)">
+        <div class="from">
+          <div class="from-contents">
+            <div class="title"><img src="icons/options.svg" /></div>
+          </div>
+        </div>
+        <div class="to">
+          <div class="to-contents">
+            <div class="top">
+              <div class="x-touch" onclick="closeDialog(this)">
+                <div class="x">
+                  <div class="line1"></div>
+                  <div class="line2"></div>
+                </div>
+              </div>
+            </div>
+            <div class="bottom">
+              <div class="row">
+                <div id="nodeOptions">
+                  Change name<br/>
+                  <input type="text" id="changeName" /><br/>
+                  <button id="btnDeleteNode" onclick="deleteNode(this)">Delete node</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 </div>
 

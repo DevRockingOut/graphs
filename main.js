@@ -12,7 +12,8 @@ var simulation = {
     zoom: 100,
     user_preferences: undefined,
     selected_node: undefined,
-    selected_edge: undefined
+    selected_edge: undefined,
+    add_node: false
 };
 
 window.onload = function(){
@@ -90,6 +91,16 @@ function displayEditOptions(obj){
     }
 }
 
+function addNode(){
+    simulation.add_node = true;
+    simulation.add_edge = false;
+}
+
+function addEdge(){
+    simulation.add_edge = true;
+    simulation.add_node = false;
+}
+
 function deleteGraph(obj){
     var dialog = obj.closest(".dialog");
 
@@ -106,6 +117,7 @@ function deleteGraph(obj){
 function deleteNode(obj){
     graph1.deleteNode(simulation.selected_node);
     closeDialog(obj);
+    obj.closest(".dialog").style.display = "none";
 }
 
 function nodeClick(id){

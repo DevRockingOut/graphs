@@ -149,7 +149,7 @@ Graph.prototype.deleteGraph = function(){
  * @param {event} e
  */
 Graph.prototype.click = function(e){
-    if(e.target.id == this.graph_id){
+    if(simulation.add_node && e.target.id == this.graph_id){
         // create new node
         var node_name = "N" + (++this.nodes_count);
         var parentPosition = this.getPosition(e.currentTarget);
@@ -172,8 +172,22 @@ Graph.prototype.click = function(e){
         var edge = e.target.closest(".edges");
         
         if(node){
-            // add nodes options (move?, change node name, add edge -> from/to)
-            document.getElementById("editNodeDialog").style.display = "block";
+            // add nodes options (add edge -> from/to)
+            var node = document.getElementById(simulation.selected_node).getBoundingClientRect();
+            var dialog = document.getElementById("editNodeDialog");
+
+            dialog.style.display = "block";
+            dialog.style.left = node.left + node.width + "px";
+            dialog.style.top = node.top + "px";
+
+            var input = dialog.querySelector("#changeName");
+            input.value = simulation.selected_node;
+            var that = this;
+            input.addEventListener("change", function(){ 
+                that.nodes_components[simulation.selected_node].name = input.value;
+                document.getElementById(simulation.selected_node).querySelector(".textSvg").innerHTML = input.value;
+            });
+            
         } else if(edge){
             // add nodes options (change node name, change edge -> from/to)
             document.getElementById("editNodeDialog").style.display = "none";

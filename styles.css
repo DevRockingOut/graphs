@@ -310,6 +310,9 @@
 /*---------Edit node dialog------------*/
 .dialog#editNodeDialog {
     display:none;
+    position:absolute;
+    float:none;
+    margin:0;
 }
 
 .dialog#editNodeDialog .content{
