@@ -10,7 +10,9 @@ var simulation = {
     pause: false,
     replay:false,
     zoom: 100,
-    user_preferences: undefined
+    user_preferences: undefined,
+    selected_node: undefined,
+    selected_edge: undefined
 };
 
 window.onload = function(){
@@ -72,6 +74,22 @@ function zoomOut(){
     container.style.transform = "scale(" + simulation.zoom/100 + ")";
 }
 
+function displayEditOptions(obj){
+    if(document.getElementById("menuEdit").classList.contains("show")){
+        obj.style.borderRadius = "0px";
+        document.getElementById("menuEdit").classList.remove("show");
+        document.getElementById("btnAddNode").classList.remove("show");
+        document.getElementById("btnAddEdge").classList.remove("show");
+        document.getElementById("deleteDialog").classList.remove("show");
+    }else{
+        obj.style.borderRadius = "0px";
+        document.getElementById("menuEdit").classList.add("show");
+        document.getElementById("btnAddNode").classList.add("show");
+        document.getElementById("btnAddEdge").classList.add("show");
+        document.getElementById("deleteDialog").classList.add("show");
+    }
+}
+
 function deleteGraph(obj){
     var dialog = obj.closest(".dialog");
 
@@ -83,6 +101,24 @@ function deleteGraph(obj){
     }
 
     closeDialog(obj);
+}
+
+function deleteNode(obj){
+    graph1.deleteNode(simulation.selected_node);
+    closeDialog(obj);
+}
+
+function nodeClick(id){
+    simulation.selected_node = id;
+}
+
+function deleteEdge(obj){
+    graph1.deleteEdge(simulation.selected_edge);
+    closeDialog(obj)
+}
+
+function edgeClick(id){
+    simulation.selected_edge = id;
 }
 
 function showDialog(obj){

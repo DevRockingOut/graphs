@@ -21,7 +21,7 @@
     cursor:pointer;
     margin:0 auto;
     margin-top:40px;
-    background-color:#0188CC;/*#E84C3D;*/
+    background-color:#0188CC;
     border:none;
     border-radius:3px;
     color:white;
@@ -69,6 +69,26 @@
 .menu.btn-action img {
     width:24px;
     margin-right:12px;
+}
+
+/*-----Animate Edit Menu-----*/
+#editOptions {
+    width: 168px; /* TODO: make responsive */ 
+    position:relative; 
+    float:right; 
+    overflow: hidden;
+}
+
+#menuEdit {
+    background-color:#0188CC;
+    width:100%;
+    position:relative;
+    transform: translateX(-168px); /* TODO: make responsive */ 
+    transition: 0.6s ease-out;
+}
+
+#menuEdit.show {
+    transform: translateX(0);
 }
 
 /*---------Dialog styles------------*/
@@ -335,19 +355,20 @@
     font-family:OpenSans;
 }
 
-.dialog #btnAddEdge {
+.dialog #btnDeleteNode {
     display:block;
     margin:0 auto;
     margin-top:30px;
-    padding:5px 20px 5px 20px;
+    padding:5px 15px 5px 15px;
     border:none;
-    border:2px solid #0188CC;
+    border:2px solid #E84C3D;
     background-color:transparent;
-    color:#0188CC;
+    color: #E84C3D;
     font-size:14px;
     border-radius:3px;
     font-family:OpenSans;
     outline:none;
+    cursor:pointer;
 }
 
 #editNodeDialog .title img{
