@@ -74,7 +74,15 @@ function zoomOut(){
 }
 
 function deleteGraph(obj){
+    var dialog = obj.closest(".dialog");
+
     graph1.deleteGraph();
+
+    if(dialog.querySelector('#cboRememberChoice').checked){
+        simulation.user_preferences = { cboRememberChoice: true };
+        storeUserPreferences(simulation.user_preferences);
+    }
+
     closeDialog(obj);
 }
 
@@ -105,9 +113,9 @@ function closeDialog(obj){
     dialog.querySelector('.x-touch').classList.remove('expand');
     
     if(dialog.querySelector('#cboRememberChoice')){
-        simulation.user_preferences = { cboRememberChoice: true };
-        storeUserPreferences(simulation.user_preferences);
-        dialog.querySelector('#cboRememberChoice').checked = false;
+        if(simulation.user_preferences && !simulation.user_preferences.cboRememberChoice){
+            dialog.querySelector('#cboRememberChoice').checked = false;
+        }
     }
 
     event.stopPropagation();
