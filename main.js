@@ -8,7 +8,9 @@ var graph1;
 var simulation = {
     play: false,
     pause: false,
-    zoom: 100
+    replay:false,
+    zoom: 100,
+    user_preferences: undefined
 };
 
 window.onload = function(){
@@ -23,6 +25,11 @@ function main(){
     this.graphClick = handler.bind(this);
 
     document.getElementById(graph1.graph_id).addEventListener('click', this.graphClick);
+
+    if(!simulation.user_preferences){
+        simulation.user_preferences = getUserPreferences();
+        console.log(simulation.user_preferences);
+    }
 }
 
 function play(){
@@ -72,9 +79,22 @@ function deleteGraph(obj){
 }
 
 function showDialog(obj){
-    obj.parentElement.classList.add('expand');
-    obj.classList.add('expand');
-    obj.querySelector('.x-touch').classList.add('expand');
+    if(simulation.user_preferences && simulation.user_preferences.cboRememberChoice){
+        obj.querySelector('#cboRememberChoice').checked = true;
+        
+        if(obj.parentElement.id != "deleteDialog"){
+            obj.parentElement.classList.add('expand');
+            obj.classList.add('expand');
+            obj.querySelector('.x-touch').classList.add('expand');
+        }else if(obj.parentElement.id == "deleteDialog"){
+            graph1.deleteGraph();
+        }
+    }else{
+        obj.parentElement.classList.add('expand');
+        obj.classList.add('expand');
+        obj.querySelector('.x-touch').classList.add('expand');
+    }
+
     pause(true);
 }
 
@@ -85,10 +105,45 @@ function closeDialog(obj){
     dialog.querySelector('.x-touch').classList.remove('expand');
     
     if(dialog.querySelector('#cboRememberChoice')){
+        simulation.user_preferences = { cboRememberChoice: true };
+        storeUserPreferences(simulation.user_preferences);
         dialog.querySelector('#cboRememberChoice').checked = false;
     }
 
     event.stopPropagation();
+}
+
+function storeUserPreferences(cvalue){
+    var date = new Date();
+    var expire_days = 30;
+    date.setTime(date.getTime() + (expire_days * 24 * 60 * 60 * 1000));
+    var expires = "expires=" + date.toUTCString();
+
+    // create cookie
+    document.cookie = "graph=" + JSON.stringify(cvalue) + ";expires=" + expires + ";path=/";
+    console.log(document.cookie);
+}
+
+function getUserPreferences(){
+    var name = "graph=";
+    var ca = document.cookie.split(';');
+    var cookie_value;
+
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            // cookie found
+            cookie_value =  c.substring(name.length, c.length);
+            i = ca.length;
+        }
+    }
+
+    if(cookie_value){
+        return JSON.parse(cookie_value);
+    }
 }
 
 function previewFonts(target){
