@@ -9,9 +9,12 @@ Draggable.prototype.attachListeners = function(object){
         // save ref to object dragged
         var object = this;
 
+        var scaleX = object.getBoundingClientRect().width / object.clientWidth;
+        var scaleY = object.getBoundingClientRect().height / object.clientHeight;
+
         // drag object from original click position (not always from center)
-        var shiftX = event.clientX - object.getBoundingClientRect().left;
-        var shiftY = event.clientY - object.getBoundingClientRect().top;
+        var shiftX = event.clientX - object.getBoundingClientRect().left + (object.getBoundingClientRect().width * scaleX);
+        var shiftY = event.clientY - object.getBoundingClientRect().top + (object.getBoundingClientRect().height * scaleY);
 
         // parent container position
         var parentPos = object.parentElement.getBoundingClientRect();

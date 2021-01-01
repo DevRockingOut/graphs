@@ -36,11 +36,7 @@
 }
 
 .node {
-    /*min-height: 50px;
-    min-width: 50px;
-    padding:8px;
-    background-color: rgb(32, 103, 255);
-    border-radius: 50%;*/
+    transform:scale(0.5);
     display: flex;
     justify-content: center;
     align-items: center;

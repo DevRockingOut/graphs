@@ -145,16 +145,15 @@ Graph.prototype.deleteGraph = function(){
 
 
 /**
- * Public function used to drag/drop objects in graph
+ * Public function used to handle click of objects in graph
  * @param {event} e
  */
 Graph.prototype.click = function(e){
-    
     if(e.target.id == this.graph_id){
         // create new node
         var node_name = "N" + (++this.nodes_count);
         var parentPosition = this.getPosition(e.currentTarget);
-        var node_width = 58;  // To change later for responsiveness
+        var node_width = 200;  // To change later for responsiveness
         var x = e.clientX - parentPosition.x - (node_width / 2);
         var y = e.clientY - parentPosition.y - (node_width / 2);
 
@@ -162,13 +161,23 @@ Graph.prototype.click = function(e){
         
         var node = document.getElementById(node_name);
     
+        document.getElementById("editNodeDialog").style.display = "none";
+
         // enable drag/drop for node
         var draggable = new Draggable();
         draggable.attachListeners(node);
-    } else if(e.target.classList.contains("node")){
-        // add nodes options (move?, change node name, add edge -> from/to)
-    } else if(e.target.classList.contains("edges")){
-        // add nodes options (change node name, change edge -> from/to)
+    } else {
+        // check if closest parent element has class node or edges
+        var node = e.target.closest(".node");
+        var edge = e.target.closest(".edges");
+        
+        if(node){
+            // add nodes options (move?, change node name, add edge -> from/to)
+            document.getElementById("editNodeDialog").style.display = "block";
+        } else if(edge){
+            // add nodes options (change node name, change edge -> from/to)
+            document.getElementById("editNodeDialog").style.display = "none";
+        }
     }
 }
 

@@ -28,7 +28,6 @@ function main(){
 
     if(!simulation.user_preferences){
         simulation.user_preferences = getUserPreferences();
-        console.log(simulation.user_preferences);
     }
 }
 
