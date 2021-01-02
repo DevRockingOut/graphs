@@ -20,6 +20,6 @@ EdgeComponent.prototype.create = function(id, from, to, cost){
     this.from = from;
     this.to = to;
     this.cost = cost;
-    this.component = "<div id='" + id + "' class='edge'>5103210991</div>";
+    this.component = "<div id='" + id + "' class='edge'></div>";
     return this.component;
 }

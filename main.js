@@ -13,7 +13,9 @@ var simulation = {
     user_preferences: undefined,
     selected_node: undefined,
     selected_edge: undefined,
-    add_node: false
+    add_node: false,
+    add_edge: false,
+    new_edge: { from: undefined, to: undefined }
 };
 
 window.onload = function(){

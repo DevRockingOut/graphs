@@ -166,6 +166,46 @@ Graph.prototype.click = function(e){
         // enable drag/drop for node
         var draggable = new Draggable();
         draggable.attachListeners(node);
+
+    } else if(simulation.add_edge && e.target.closest(".node")){ // this finds closest element with class node
+       var node = e.target.closest(".node");
+
+       if(simulation.new_edge.from == undefined){
+            simulation.new_edge.from = node.id;
+       }else {
+            simulation.new_edge.to = node.id;
+
+            var node_from = document.getElementById(simulation.new_edge.from);
+            var left = node_from.style.left.replace("px","");
+            var width = node_from.clientWidth;
+            var top = node_from.style.top.replace("px","");
+            var height = node_from.clientHeight;
+
+            var center_x = parseInt(left) + width/2;
+            var center_y = parseInt(top) + height/2;
+
+            console.log(node_from);
+            console.log(center_x);
+            console.log(center_y);
+            console.log("left: " + left + "   width: " + width);
+            console.log("top: " + left + "   height: " + width);
+
+
+            // normalement on devrait pouvoir faire node.offsetLeft
+
+            // create new edge
+            this.addEdge(++this.edges_count, simulation.new_edge.from, simulation.new_edge.to, 1);
+
+            var edge = document.getElementById(this.edges_count);
+            edge.style.left = center_x;
+            edge.style.top = center_y;
+
+            // so lets try get something else
+
+            // but wait first lets try without div
+            
+       }
+
     } else {
         // check if closest parent element has class node or edges
         var node = e.target.closest(".node");
