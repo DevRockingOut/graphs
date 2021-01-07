@@ -176,34 +176,21 @@ Graph.prototype.click = function(e){
             simulation.new_edge.to = node.id;
 
             var node_from = document.getElementById(simulation.new_edge.from);
-            var left = node_from.style.left.replace("px","");
-            var width = node_from.clientWidth;
-            var top = node_from.style.top.replace("px","");
-            var height = node_from.clientHeight;
+            var node_to = document.getElementById(simulation.new_edge.to);
 
-            var center_x = parseInt(left) + width/2;
-            var center_y = parseInt(top) + height/2;
+            var center_from = this.getCenterCoordinates(node_from);
+            var center_to = this.getCenterCoordinates(node_to);
 
-            console.log(node_from);
-            console.log(center_x);
-            console.log(center_y);
-            console.log("left: " + left + "   width: " + width);
-            console.log("top: " + left + "   height: " + width);
-
-
-            // normalement on devrait pouvoir faire node.offsetLeft
+            // angle of line between 2 points
+            var angle = Math.atan2(center_to.y - center_from.y, center_to.x - center_from.x) * 180 / Math.PI;
 
             // create new edge
             this.addEdge(++this.edges_count, simulation.new_edge.from, simulation.new_edge.to, 1);
 
             var edge = document.getElementById(this.edges_count);
-            edge.style.left = center_x;
-            edge.style.top = center_y;
-
-            // so lets try get something else
-
-            // but wait first lets try without div
-            
+            edge.style.left = center_from.x;
+            edge.style.top = center_from.y - (center_from.y/2);
+            edge.style.transform = "rotate(" + angle + "deg)"; // need to fix origin because of SVG
        }
 
     } else {
@@ -233,6 +220,22 @@ Graph.prototype.click = function(e){
             document.getElementById("editNodeDialog").style.display = "none";
         }
     }
+}
+
+
+Graph.prototype.getCenterCoordinates = function(obj){
+    var center_x = 0.0;
+    var center_y = 0.0;
+
+    var left = obj.style.left.replace("px","");
+    var width = obj.clientWidth;
+    var top = obj.style.top.replace("px","");
+    var height = obj.clientHeight;
+
+    center_x = parseInt(left) + width/2;
+    center_y = parseInt(top) + height/2;
+
+    return {x: center_x, y: center_y};
 }
 
 
