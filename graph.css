@@ -50,9 +50,10 @@
 	position: relative;
     width: 200px;
     height: 7px;
-    background: #000;
+    background: red;/*#000;*/
     z-index:-1;
     display: inline-block;
+    outline: 1px solid transparent; /* used to improve edge smoothing */
     /*vertical-align: middle;*/
 }
 
@@ -62,8 +63,7 @@
 	width:0px;
 	height:7px;
 	background-color:red;
-	transition: all .5s; 
-	
+	transition: all .5s;
 }
 
 #G1:hover .edge:before {

@@ -182,15 +182,16 @@ Graph.prototype.click = function(e){
             var center_to = this.getCenterCoordinates(node_to);
 
             // angle of line between 2 points
-            var angle = Math.atan2(center_to.y - center_from.y, center_to.x - center_from.x) * 180 / Math.PI;
+            var angle = Math.round(Math.atan2(center_to.y - center_from.y, center_to.x - center_from.x) * 180 / Math.PI);
 
             // create new edge
             this.addEdge(++this.edges_count, simulation.new_edge.from, simulation.new_edge.to, 1);
 
             var edge = document.getElementById(this.edges_count);
+            edge.style.transformOrigin = "top left";
+            edge.style.transform = "rotate(" + angle + "deg)";
             edge.style.left = center_from.x;
-            edge.style.top = center_from.y - (center_from.y/2);
-            edge.style.transform = "rotate(" + angle + "deg)"; // need to fix origin because of SVG
+            edge.style.top = center_from.y;
        }
 
     } else {
