@@ -49,7 +49,7 @@
 .edge {
 	position: relative;
     width: 200px;
-    height: 7px;
+    height: 10px;
     background: red;/*#000;*/
     z-index:-1;
     display: inline-block;

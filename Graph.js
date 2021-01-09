@@ -183,6 +183,12 @@ Graph.prototype.click = function(e){
 
             // angle of line between 2 points
             var angle = Math.round(Math.atan2(center_to.y - center_from.y, center_to.x - center_from.x) * 180 / Math.PI);
+            
+            // length of edge = distance between from and to nodes
+            var distance = Math.sqrt(
+                Math.pow(center_to.x - center_from.x, 2) +
+                Math.pow(center_to.y - center_from.y, 2)
+            );
 
             // create new edge
             this.addEdge(++this.edges_count, simulation.new_edge.from, simulation.new_edge.to, 1);
@@ -192,6 +198,7 @@ Graph.prototype.click = function(e){
             edge.style.transform = "rotate(" + angle + "deg)";
             edge.style.left = center_from.x;
             edge.style.top = center_from.y;
+            edge.style.width = distance;
        }
 
     } else {
