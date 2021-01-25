@@ -9,6 +9,7 @@ function EdgeComponent(){
     this.from = null;
     this.to = null;
     this.cost = null;
+    this.position = { x:0, y:0 };
 }
 
 /**

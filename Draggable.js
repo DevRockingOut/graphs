@@ -2,7 +2,7 @@ function Draggable(){
     this.object = null;
 }
 
-Draggable.prototype.attachListeners = function(object){
+Draggable.prototype.attachListeners = function(object, notify){
     this.object = object;
     
     this.object.onmousedown = function(event) {
@@ -12,7 +12,7 @@ Draggable.prototype.attachListeners = function(object){
         var scaleX = object.getBoundingClientRect().width / object.clientWidth;
         var scaleY = object.getBoundingClientRect().height / object.clientHeight;
 
-        // drag object from original click position (not always from center)
+        // drag object from click position (not always from center)
         var shiftX = event.clientX - object.getBoundingClientRect().left + (object.getBoundingClientRect().width * scaleX);
         var shiftY = event.clientY - object.getBoundingClientRect().top + (object.getBoundingClientRect().height * scaleY);
 
@@ -28,8 +28,15 @@ Draggable.prototype.attachListeners = function(object){
       
         // moves the object at (pageX, pageY) coordinates, taking initial shifts into account
         function moveAt(pageX, pageY) {
-            object.style.left = pageX - parentPos.left - shiftX + 'px';
-            object.style.top = pageY - parentPos.top - shiftY + 'px';
+            var x = pageX - parentPos.left - shiftX;
+            var y = pageY - parentPos.top - shiftY;
+
+            object.style.left = x + 'px';
+            object.style.top = y + 'px';
+
+            if(notify != undefined){
+                notify(object);
+            }
         }
       
         function onMouseMove(event) {

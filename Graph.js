@@ -86,7 +86,6 @@ Graph.prototype.addEdge = function(id, from_node, to_node, edge_cost){
     this.edges_components[id] = edge;
     this.graph[from_node].push({edge_id: id, from: from_node, to: to_node, cost: edge_cost});
 
-    // TODO: calculate position in page where to put edge
     this.render(this.graph_id, component, false);
 }
 
@@ -162,17 +161,18 @@ Graph.prototype.click = function(e){
         var node = document.getElementById(node_name);
     
         document.getElementById("editNodeDialog").style.display = "none";
-
+        
         // enable drag/drop for node
         var draggable = new Draggable();
-        draggable.attachListeners(node);
+        draggable.attachListeners(node, this.notify.bind(this));
 
     } else if(simulation.add_edge && e.target.closest(".node")){ // this finds closest element with class node
-       var node = e.target.closest(".node");
+        // Add new edge
+        var node = e.target.closest(".node");
 
-       if(simulation.new_edge.from == undefined){
+        if(simulation.new_edge.from == undefined){
             simulation.new_edge.from = node.id;
-       }else {
+        }else {
             simulation.new_edge.to = node.id;
 
             var node_from = document.getElementById(simulation.new_edge.from);
@@ -193,12 +193,17 @@ Graph.prototype.click = function(e){
             // create new edge
             this.addEdge(++this.edges_count, simulation.new_edge.from, simulation.new_edge.to, 1);
 
-            var edge = document.getElementById(this.edges_count);
+            var edgeId = this.edges_count;
+            var edge = document.getElementById(edgeId);
             edge.style.transformOrigin = "top left";
             edge.style.transform = "rotate(" + angle + "deg)";
             edge.style.left = center_from.x;
             edge.style.top = center_from.y;
             edge.style.width = distance;
+            this.edges_components[edgeId].position = {
+                x: center_from.x,
+                y: center_from.y
+            };
        }
 
     } else {
@@ -230,7 +235,55 @@ Graph.prototype.click = function(e){
     }
 }
 
+/**
+ * Callback function receiving as input properties of an object
+ * @param {*} object 
+ * @param {number} x
+ * @param {number} y 
+ */
+Graph.prototype.notify = function(object){
+    if(object.classList.contains("node")){
+        var node = object;
+        var edge = this.graph[node.id][0];
+        console.log(edge);
+        // check if edge exists
+        if(edge != undefined && edge != null){
+            // handles case where the from node is clicked
+            var node_to = document.getElementById(edge.to);
+            var center_from = this.getCenterCoordinates(node);
+            var center_to = this.getCenterCoordinates(node_to);
 
+            // angle of line between 2 points
+            var angle = Math.round(Math.atan2(center_to.y - center_from.y, center_to.x - center_from.x) * 180 / Math.PI);
+            
+            // length of edge = distance between from and to nodes
+            var distance = Math.sqrt(
+                Math.pow(center_to.x - center_from.x, 2) +
+                Math.pow(center_to.y - center_from.y, 2)
+            );
+
+            console.log(distance);
+            var edge = document.getElementById(edge.edge_id);
+            edge.style.transformOrigin = "top left";
+            edge.style.transform = "rotate(" + angle + "deg)";
+            edge.style.left = center_from.x;
+            edge.style.top = center_from.y;
+            edge.style.width = distance;
+            this.edges_components[edge.edge_id].position = {
+                x: center_from.x,
+                y: center_from.y
+            };
+        }
+
+        //{edge_id: id, from: from_node, to: to_node, cost: edge_cost}
+        console.log("Node: x = " + x + " , y = " + y);
+    }
+}
+
+/**
+ * returns center coordinates { x , y } of an object
+ * @param {*} obj 
+ */
 Graph.prototype.getCenterCoordinates = function(obj){
     var center_x = 0.0;
     var center_y = 0.0;
